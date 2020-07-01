@@ -1,0 +1,8 @@
+kubectl get pods :
+>>	nginx			80/443		serveur
+	ftps			21			echange de fichiers
+	wordpress		5050		creation de sites et users
+	phpmyadmin		5000		permet d'accéder a la base de données
+	mysql			(5000/5050)	gere la base de données
+	grafana			3000		dashboards des services tournant sur le serveur
+	influxdb		(3000)		gere la base de données pour grafana
