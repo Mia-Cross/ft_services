@@ -1,20 +1,39 @@
-#build les containers
-echo lol
-cd srcs/nginx
-echo lol2
-docker build -t nginx ..
-echo lol3
-cd ../mysql
-echo lol4
-docker build -t mysql ..
-cd ../phpmyadmin
-docker build -t phpmyadmin ..
-cd ../wordpress
-docker build -t wordpress ..
-cd ..
+#!/bin/bash
 
-#run les containers
-docker run -i nginx -p 80:80 -p 443:443
-docker run -i mysql -p 5000:5000 -p 5050:5050
-docker run -i phpmyadmin -p 5000:5000
-docker run -i wordpress -p 5050:5050
+minikube start
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.3/aio/deploy/recommended.yaml
+
+docker build -t srcs/nginx:v1 .
+
+kubectl create deployment nginx --image= ??
+
+
+
+
+
+
+
+
+#init le cluster
+
+#sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+	#on peut changer l'adresse si le port est deja occupe
+#mkdir -p $HOME/.kube
+#sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+#sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+#ajouter le dashboard web de kubernetes
+#kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.3/aio/deploy/recommended.yaml
+
+#install calico
+#kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
+#kubectl create -f https://docs.projectcalico.org/manifests/custom-resources.yaml
+#watch kubectl get pods -n kube-system
+#kubectl taint nodes --all node-role.kubernetes.io/master-
+#kubectl get nodes -o wide
+#kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
+
+# "SSH to the machine"
+#sudo apt-get install openssh-server
+
+
