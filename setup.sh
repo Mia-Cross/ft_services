@@ -1,12 +1,13 @@
 #!/bin/bash
 
+# demarrer le cluster
 minikube start
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.3/aio/deploy/recommended.yaml
 
+# nginx
 docker build -t srcs/nginx:v1 .
 
-kubectl create deployment nginx --image= ??
-
+#kubectl create deployment nginx --image=
+kubectl exec nginx service nginx start && service php7.3-fpm start
 
 
 
