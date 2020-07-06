@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ft-services
+  namespace: ft-services
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: metallb-system
+  template:
+    metadata:
+      labels:
+        run: metallb-system
+    spec:
+      containers:
+      - name: nginx
+        image: my_nginx
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+      - name: wordpress
+        image: my_wordpress
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5050

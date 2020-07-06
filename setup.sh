@@ -3,11 +3,39 @@
 # demarrer le cluster
 minikube start
 
-# nginx
-docker build -t srcs/nginx:v1 .
+# clean le build precedent
+bash cleanup.sh
 
-#kubectl create deployment nginx --image=
-kubectl exec nginx service nginx start && service php7.3-fpm start
+# load-balancer : MetalLB
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
+# On first install only
+#kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+
+# nginx
+cd srcs/nginx
+echo ""
+ls
+echo ""
+docker build -t my_nginx .
+echo 1
+kubectl apply -f ns_nginx.yaml
+echo 2
+kubectl apply -f service_nginx.yaml
+echo 3
+
+#kubectl exec nginx -- bash
+cd ../wordpress
+echo ""
+ls
+echo ""
+docker build -t my_wordpress .
+kubectl apply -f ns_wordpress.yaml
+kubectl apply -f service_wordpress.yaml
+
+cd ..
+kubectl apply -f ns_ft_services.yaml
+kubectl apply -f deploy_ft_services.yaml
 
 
 

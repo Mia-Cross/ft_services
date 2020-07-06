@@ -30,7 +30,7 @@ RUN rm -f /etc/nginx/nginx.conf && mv my_nginx_config /etc/nginx/nginx.conf \
 #    && mv import/my_nginx_config /etc/nginx/sites-available/my_nginx_config \
 #	&& ln -s /etc/nginx/sites-available/my_nginx_config /etc/nginx/sites-enabled/
 
-CMD nginx && sh
+CMD nginx
 #RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 	#-subj /C=FR/ST=IDF/L=Paris/O=42/CN=lemarabe/ \
     #-keyout /etc/ssl/private/ssl_key.key -out /etc/ssl/certs/ssl_certif.crt

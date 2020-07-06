@@ -7,8 +7,12 @@ kubectl get services :
 	grafana			3000		dashboards des services tournant sur le serveur
 	influxdb		(3000)		gere la base de données pour grafana
 
+j'ai vire le start du service php-fpm, ptet qu'il faudra le remettre
+
 lsof -nP -iTCP:$PORT | grep LISTEN
 
+
+Les '-' peuvent etre remplacés par services|pods|deployment(|namespaces)?
 kubectl cluster-info
 kubectl get - list resources
 kubectl describe - show detailed information about a resource
@@ -17,5 +21,11 @@ kubectl exec - execute a command on a container in a pod
 	ex : kubectl exec -it <pod name> bash
 
 kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
-
+	permet d'utiliser 
 sudo modprobe -r rtl8723de && sudo modprobe rtl8723de ant_sel=2
+
+____________________________________________
+											\
+ErrImgNeverPull : configurer les daemons	 \
+MetalLB : finir la config					 /
+____________________________________________/

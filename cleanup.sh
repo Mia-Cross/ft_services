@@ -1,5 +1,12 @@
+# supprimer les services
+kubectl delete services wordpress
+kubectl delete services nginx
+
+# supprimer le deploiement
+kubectl delete deployment ft-services
+
 # arreter le cluster
-minikube stop
+#minikube stop
 
 # relancer ?
 #	minikube start
