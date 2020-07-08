@@ -4,22 +4,22 @@
 # lancher docker (MacOS only)
 #bash ~/42toolbox/init_docker.sh
 # demarrer le cluster
-#minikube start
+minikube start
 # clean le build precedent
-bash cleanup.sh
+#bash cleanup.sh
 
 ###########################
 # create namespace
-kubectl apply -f srcs/ns_ft_services.yaml
-kubectl config set-context $(kubectl config current-context) --namespace=ft-services
+#kubectl apply -f srcs/ns_ft_services.yaml
 
 ############################
 # load-balancer : MetalLB
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
 # On first install only
-#kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 kubectl apply -f srcs/metallb/config.yaml
+kubectl config set-context $(kubectl config current-context) --namespace=metallb-system
 
 ############################
 # faire le lien entre les docker daemons de minikube et de docker
@@ -43,7 +43,9 @@ docker build -t my_nginx .
 ##########################
 # deploiement
 cd ..
-kubectl apply -f deploy_ft_services.yaml
+#kubectl apply -f deploy_ft_services.yaml
+kubectl apply -f tuto.yaml
+#kubectl apply -f service_nginx.yaml
 #kubectl expose deployment ft-services --type=LoadBalancer --name=my-metallb
 #kubectl expose service my-metallb --type=NodePort --name=ss-nginx
 #kubectl expose deployment ft-services --type=NodePort --name=wordpress

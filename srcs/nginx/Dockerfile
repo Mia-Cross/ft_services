@@ -18,7 +18,7 @@ COPY srcs .
 RUN rm -f /etc/nginx/nginx.conf && mv my_nginx_config /etc/nginx/nginx.conf \
 	&& mv index.html /www/ && mkdir -p /run/nginx
 
-CMD nginx
+CMD nginx && sh
 
 #RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 	#-subj /C=FR/ST=IDF/L=Paris/O=42/CN=lemarabe/ \

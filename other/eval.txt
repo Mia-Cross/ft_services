@@ -8,9 +8,12 @@ kubectl get services :
 	influxdb		(3000)		gere la base de données pour grafana
 ____________________________________________
 											\
-ErrImgNeverPull : configurer les daemons	 \
-MetalLB : finir la config					 /
+Creer un service ext loadbalancer MetalLB	 \
+Creer un service interne nginx				  \
+Revoir les ports que je donne				  /
+Revoir l'organisation du repo				 /
 ____________________________________________/
+
 
 COMMANDES UTILES :
 

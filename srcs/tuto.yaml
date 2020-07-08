@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ft-services
-  namespace: ft-services
+  name: nginx
+  labels:
+    app: nginx 
 spec:
-  replicas: 2
   selector:
     matchLabels:
       app: nginx
@@ -14,9 +14,24 @@ spec:
         app: nginx
     spec:
       containers:
-      - name: c-nginx
+      - name: nginx
         image: my_nginx
         imagePullPolicy: Never
         ports:
         - name: http
           containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx
+  type: LoadBalancer
