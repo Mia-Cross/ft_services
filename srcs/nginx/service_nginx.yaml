@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
-  namespace: nginx
+  name: s-nginx
+  namespace: ft-services
 spec:
   selector:
     app: nginx

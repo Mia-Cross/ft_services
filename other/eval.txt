@@ -6,26 +6,51 @@ kubectl get services :
 	mysql			(5000/5050)	gere la base de données
 	grafana			3000		dashboards des services tournant sur le serveur
 	influxdb		(3000)		gere la base de données pour grafana
-
-j'ai vire le start du service php-fpm, ptet qu'il faudra le remettre
-
-lsof -nP -iTCP:$PORT | grep LISTEN
-
-
-Les '-' peuvent etre remplacés par services|pods|deployment(|namespaces)?
-kubectl cluster-info
-kubectl get - list resources
-kubectl describe - show detailed information about a resource
-kubectl logs - print the logs from a container in a pod
-kubectl exec - execute a command on a container in a pod
-	ex : kubectl exec -it <pod name> bash
-
-kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
-	permet d'utiliser 
-sudo modprobe -r rtl8723de && sudo modprobe rtl8723de ant_sel=2
-
 ____________________________________________
 											\
 ErrImgNeverPull : configurer les daemons	 \
 MetalLB : finir la config					 /
 ____________________________________________/
+
+COMMANDES UTILES :
+
+lsof -nP -iTCP:$PORT | grep LISTEN
+kubectl cluster-info
+kubectl get -		list resources							Les '-' peuvent etre remplacés par 
+kubectl describe -	show detailed information				services
+kubectl logs -		print logs from a container in a pod	pods
+kubectl exec -		execute a cmd on a container in a pod	deployment
+					ex : kubectl exec nginx -- bash			namespaces
+kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+					alternative au fichier de config .yaml ?
+minikube ip			(192.168.99.104)
+
+
+POUR PLUS TARD:
+
+* Liste des addons de MINIKUBE = minikube addons list
+addon-manager: enabled
+dashboard: enabled
+default-storageclass: enabled
+efk: disabled
+freshpod: disabled
+gvisor: disabled
+helm-tiller: disabled
+ingress: disabled
+ingress-dns: disabled
+logviewer: disabled
+metrics-server: disabled
+nvidia-driver-installer: disabled
+nvidia-gpu-device-plugin: disabled
+registry: disabled
+registry-creds: disabled
+storage-provisioner: enabled
+storage-provisioner-gluster: disabled
+
+* Utile pour les metrics ??
+minikube addons enable metrics-server
+
+* Quand start le service php-fpm ?
+
+
+sudo modprobe -r rtl8723de && sudo modprobe rtl8723de ant_sel=2

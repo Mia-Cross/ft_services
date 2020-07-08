@@ -1,9 +1,9 @@
 # supprimer les services
-kubectl delete services wordpress
-kubectl delete services nginx
+kubectl delete services wordpress --namespace=wordpress
+kubectl delete services nginx --namespace=nginx
 
 # supprimer le deploiement
-kubectl delete deployment ft-services
+#kubectl delete namespaces ft-services
 
 # arreter le cluster
 #minikube stop

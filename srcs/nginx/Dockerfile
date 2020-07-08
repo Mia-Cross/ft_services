@@ -10,31 +10,19 @@ RUN apk update && apk upgrade \
 RUN adduser -D -g 'www' www && mkdir /www/ \
 	&& chown -R www:www /var/lib/nginx \
 	&& chown -R www:www /www
-#&& chown -R $USER:$USER /var/www/localhost
 
 #copie des sources dans le container
 COPY srcs .
-
 
 #configuration de nginx a partir des sources importees
 RUN rm -f /etc/nginx/nginx.conf && mv my_nginx_config /etc/nginx/nginx.conf \
 	&& mv index.html /www/ && mkdir -p /run/nginx
 
-#demarrer le service depuis l'exterieur
-#CMD /etc/init.d/nginx start
-#CMD /usr/sbin/nginx -g "daemon off;"
-#RUN rc-service nginx status
-
-
-#RUN rm -f /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-#    && mv import/my_nginx_config /etc/nginx/sites-available/my_nginx_config \
-#	&& ln -s /etc/nginx/sites-available/my_nginx_config /etc/nginx/sites-enabled/
-
 CMD nginx
+
 #RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 	#-subj /C=FR/ST=IDF/L=Paris/O=42/CN=lemarabe/ \
     #-keyout /etc/ssl/private/ssl_key.key -out /etc/ssl/certs/ssl_certif.crt
-
 
 # faire le lien entre les ports de l'ordi et le reseau
 EXPOSE 80
