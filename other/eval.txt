@@ -8,9 +8,16 @@ kubectl get services :
 	influxdb		(3000)		gere la base de données pour grafana
 ____________________________________________
 											\
-
+RESTE A FAIRE :								 \
+Setup un container telegraf					  \
+Setup un container influxdb					   \
+Setup un container grafana					    \
+Creer un dashboard par container			     |
+Mettre le HTTPS et gerer les redirections	    /
+Difference SSH / SSL ???					   /
+Setup un container ftps						  /
+Creer + de users sur wordpress ?			 /
 ____________________________________________/
-
 
 COMMANDES UTILES :
 
@@ -30,6 +37,54 @@ minikube ssh		rentrer dans le cluster Kubernetes
 docker ps (-a)		voir les containers la où t'es
 docker exec -it <CONTAINER> sh
 					-> rentrer dans un container
+
+InfluxDB contient :
+* un .conf (/etc/influxdb.conf)
+* des executables dans bin :
+	influx_inspect
+	influx_stress
+	influx_tools
+	influx_tsm
+* un executable dans sbin : (daemon ??)
+	influxd
+
+Grafana contient (en theorie) :
+* un .ini (/etc/grafana.ini)
+* des executables :
+	/usr/bin/grafana-cli
+	/usr/sbin/grafana-server
+* des exemples de conf (/usr/share/grafana/conf)
+
+POUR PLUS TARD:
+
+* Liste des addons de MINIKUBE = minikube addons list
+addon-manager: enabled
+dashboard: enabled
+default-storageclass: enabled
+efk: disabled
+freshpod: disabled
+gvisor: disabled
+helm-tiller: disabled
+ingress: disabled
+ingress-dns: disabled
+logviewer: disabled
+metrics-server: disabled
+nvidia-driver-installer: disabled
+nvidia-gpu-device-plugin: disabled
+registry: disabled
+registry-creds: disabled
+storage-provisioner: enabled
+storage-provisioner-gluster: disabled
+
+* Utile pour les metrics ??
+minikube addons enable metrics-server
+
+
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+sudo modprobe -r rtl8723de && sudo modprobe rtl8723de ant_sel=2
+////////////////////////////////////////////////////////////////////
+
 
 # /usr/bin/mysql_install_db --user=mysql
 Installing MariaDB/MySQL system tables in './data' ...
@@ -60,32 +115,3 @@ docker run --name mysql-db -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=mukit mysql:la
 docker pull phpmyadmin/phpmyadmin:latest
 docker run --name my-own-phpmyadmin -d --link mysql-db:db -p 8081:80 phpmyadmin/phpmyadmin
 >> ACCESS PHPMYADMIN @ http://localhost:8081
-
-POUR PLUS TARD:
-
-* Liste des addons de MINIKUBE = minikube addons list
-addon-manager: enabled
-dashboard: enabled
-default-storageclass: enabled
-efk: disabled
-freshpod: disabled
-gvisor: disabled
-helm-tiller: disabled
-ingress: disabled
-ingress-dns: disabled
-logviewer: disabled
-metrics-server: disabled
-nvidia-driver-installer: disabled
-nvidia-gpu-device-plugin: disabled
-registry: disabled
-registry-creds: disabled
-storage-provisioner: enabled
-storage-provisioner-gluster: disabled
-
-* Utile pour les metrics ??
-minikube addons enable metrics-server
-
-
-
-
-sudo modprobe -r rtl8723de && sudo modprobe rtl8723de ant_sel=2
