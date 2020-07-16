@@ -1,17 +1,14 @@
 kubectl get services :
 >>	nginx			80/443		serveur
 	ftps			21			echange de fichiers
-	wordpress		5050		creation de sites et users
-	phpmyadmin		5000		permet d'accéder a la base de données
-	mysql			(5000/5050)	gere la base de données
+>>	wordpress		5050		creation de sites et users
+>>	phpmyadmin		5000		permet d'accéder a la base de données
+>>	mysql			(5000/5050)	gere la base de données
 	grafana			3000		dashboards des services tournant sur le serveur
 	influxdb		(3000)		gere la base de données pour grafana
 ____________________________________________
 											\
-Creer un service ext loadbalancer MetalLB	 \
-Creer un service interne nginx				  \
-Revoir les ports que je donne				  /
-Revoir l'organisation du repo				 /
+
 ____________________________________________/
 
 
@@ -19,7 +16,7 @@ COMMANDES UTILES :
 
 lsof -nP -iTCP:$PORT | grep LISTEN
 kubectl cluster-info
-kubectl get -		list resources							Les '-' peuvent etre remplacés par 
+kubectl get -		list resources							Les '-' peuvent etre remplacés par
 kubectl describe -	show detailed information				services
 kubectl logs -		print logs from a container in a pod	pods
 kubectl exec -		execute a cmd on a container in a pod	deployment
@@ -27,7 +24,42 @@ kubectl exec -		execute a cmd on a container in a pod	deployment
 kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
 					alternative au fichier de config .yaml ?
 minikube ip			(192.168.99.104)
+kubectl config set-context $(kubectl config current-context) --namespace=metallb-system
+					change le contexte pour rester dans le namespace en question
+minikube ssh		rentrer dans le cluster Kubernetes
+docker ps (-a)		voir les containers la où t'es
+docker exec -it <CONTAINER> sh
+					-> rentrer dans un container
 
+# /usr/bin/mysql_install_db --user=mysql
+Installing MariaDB/MySQL system tables in './data' ...
+OK
+
+To start mysqld at boot time you have to copy
+support-files/mysql.server to the right place for your system
+
+Two all-privilege accounts were created.
+One is root@localhost, it has no password, but you need to
+be system 'root' user to connect. Use, for example, sudo mysql
+The second is mysql@localhost, it has no password either, but
+you need to be the system 'mysql' user to connect.
+After connecting you can set the password, if you would need to be
+able to connect as any of these users with a password and without sudo
+
+You can start the MariaDB daemon with:
+cd '/usr' ; /usr/bin/mysqld_safe --datadir='./data'
+
+You can test the MariaDB daemon with mysql-test-run.pl
+cd '/usr/mysql-test' ; perl mysql-test-run.pl
+
+
+Tests docker pour MySQL/phpmyadmin
+NB : ca marche pareil avec -it au lieu de -d mais ca bloque un terminal par image
+docker pull mysql:latest
+docker run --name mysql-db -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=mukit mysql:latest
+docker pull phpmyadmin/phpmyadmin:latest
+docker run --name my-own-phpmyadmin -d --link mysql-db:db -p 8081:80 phpmyadmin/phpmyadmin
+>> ACCESS PHPMYADMIN @ http://localhost:8081
 
 POUR PLUS TARD:
 
@@ -53,7 +85,7 @@ storage-provisioner-gluster: disabled
 * Utile pour les metrics ??
 minikube addons enable metrics-server
 
-* Quand start le service php-fpm ?
+
 
 
 sudo modprobe -r rtl8723de && sudo modprobe rtl8723de ant_sel=2

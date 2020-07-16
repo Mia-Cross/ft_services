@@ -15,14 +15,28 @@ http {
     access_log                  /var/log/nginx/access.log;
     keepalive_timeout           3000;
     server {
-        listen                  80;
-        root                    /www;
-        index                   index.html index.htm;
-        server_name             localhost;
-        client_max_body_size    32m;
-        error_page              500 502 503 504  /50x.html;
-        location = /50x.html {
-              root              /var/lib/nginx/html;
+        listen TMP_PORT;
+        listen [::]:TMP_PORT;
+
+        #listen 443 ssl;
+		#listen [::]:443 ssl;
+		#ssl_certificate /etc/ssl/certs/ssl_certif.crt;
+		#ssl_certificate_key /etc/ssl/private/ssl_key.key;
+
+        root /var/www;
+        index index.php index.html index.htm;
+
+        server_name _;
+
+        location / {
+                autoindex on;
+                try_files $uri $uri/ =404;
+        }
+
+        location ~ \.php$ {
+                fastcgi_pass 127.0.0.1:9000;
+                fastcgi_index hello.php;
+                include fastcgi.conf;
         }
     }
 }

@@ -1,24 +1,43 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Dockerfile                                         :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2020/07/14 18:41:53 by lemarabe          #+#    #+#              #
+#    Updated: 2020/07/14 22:34:24 by lemarabe         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 FROM alpine:latest
 
 LABEL maintainer="Leila Marabese lemarabe@student.42.fr"
 
 # mise a jour des packages et installation de nginx
 RUN apk update && apk upgrade \
-	&& apk add nginx \
-	&& apk add php7 php7-fpm
+	&& apk add nginx openrc openssh mysql-client screen \
+	&& apk add libmcrypt-dev zlib-dev gmp-dev freetype-dev libjpeg-turbo-dev libpng-dev \
+	&& apk add php7 php7-fpm php7-json php7-zlib php7-xml php7-pdo php7-phar \
+    php7-pdo_mysql php7-mysqli php7-session php7-openssl php7-gd php7-iconv \
+    php7-mcrypt php7-gmp php7-zip php7-curl php7-opcache php7-ctype php7-apcu \
+    php7-intl php7-bcmath php7-dom php7-mbstring php7-xmlreader
 
-RUN adduser -D -g 'www' www && mkdir /www/ \
+
+RUN adduser -D -g 'www' www && mkdir -p /var/www/ \
 	&& chown -R www:www /var/lib/nginx \
-	&& chown -R www:www /www
+	&& chown -R www:www /var/www
 
 #copie des sources dans le container
 COPY srcs .
 
 #configuration de nginx a partir des sources importees
 RUN rm -f /etc/nginx/nginx.conf && mv my_nginx_config /etc/nginx/nginx.conf \
-	&& mv index.html /www/ && mkdir -p /run/nginx
+	&& mv index.html /var/www/ && mkdir -p /run/nginx \
+	&& mv php7.sh /etc/profile.d/ && sh /etc/profile.d/php7.sh
 
-CMD nginx && sh
+CMD sed -i 's/TMP_PORT/80/g' /etc/nginx/nginx.conf \
+	&& nginx && php-fpm7 && tail -F /dev/null
 
 #RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 	#-subj /C=FR/ST=IDF/L=Paris/O=42/CN=lemarabe/ \
