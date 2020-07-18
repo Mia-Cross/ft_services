@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-FROM alpine:latest
+FROM my_telegraf:latest
 
 LABEL maintainer="Leila Marabese lemarabe@student.42.fr"
 
@@ -23,26 +23,12 @@ RUN apk update && apk upgrade \
     php7-mcrypt php7-gmp php7-zip php7-curl php7-opcache php7-ctype php7-apcu \
     php7-intl php7-bcmath php7-dom php7-mbstring php7-xmlreader
 
+COPY srcs import
 
-RUN adduser -D -g 'www' www && mkdir -p /var/www/ \
-	&& chown -R www:www /var/lib/nginx \
-	&& chown -R www:www /var/www
-
-#copie des sources dans le container
-COPY srcs .
-
-#configuration de nginx a partir des sources importees
-RUN rm -f /etc/nginx/nginx.conf && mv my_nginx_config /etc/nginx/nginx.conf \
-	&& mv index.html /var/www/ && mkdir -p /run/nginx \
-	&& mv php7.sh /etc/profile.d/ && sh /etc/profile.d/php7.sh
+RUN sh import/prepare_nginx.sh
 
 CMD sed -i 's/TMP_PORT/80/g' /etc/nginx/nginx.conf \
-	&& nginx && php-fpm7 && tail -F /dev/null
+	&& sh import/init_nginx.sh ; sh
+	#tail -F /dev/null
 
-#RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-	#-subj /C=FR/ST=IDF/L=Paris/O=42/CN=lemarabe/ \
-    #-keyout /etc/ssl/private/ssl_key.key -out /etc/ssl/certs/ssl_certif.crt
-
-# faire le lien entre les ports de l'ordi et le reseau
-EXPOSE 80
-#EXPOSE 80 443
+EXPOSE 80 443
