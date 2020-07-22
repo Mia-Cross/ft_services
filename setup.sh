@@ -19,23 +19,32 @@ kubectl apply -f srcs/metallb/config.yaml
 eval $(minikube docker-env)
 
 ##########################
-# nginx
-cd srcs/nginx
-docker build -t my_nginx .
-kubectl apply -f nginx.yaml
+# telegraf
+docker build -t my_telegraf srcs/telegraf/
+kubectl apply -f srcs/telegraf/telegraf.yaml
 ##########################
-# my_sql
-cd ../mysql
-docker build -t my_mysql .
-kubectl apply -f mysql.yaml
+# nginx
+docker build -t my_nginx srcs/nginx/
+kubectl apply -f srcs/nginx/nginx.yaml
+##########################
+# influxdb
+docker build -t my_influxdb srcs/influxdb/
+kubectl apply -f srcs/influxdb/influxdb.yaml
+##########################
+# grafana
+docker build -t my_grafana srcs/grafana/
+kubectl apply -f srcs/grafana/grafana.yaml
+##########################
+# mysql
+docker build -t my_mysql srcs/mysql/
+kubectl apply -f srcs/mysql/mysql.yaml
 ##########################
 # wordpress
-cd ../wordpress
-docker build -t my_wordpress .
-kubectl apply -f wordpress.yaml
+docker build -t my_wordpress srcs/wordpress/
+kubectl apply -f srcs/wordpress/wordpress.yaml
 ##########################
 # phpmyadmin
-cd ../phpmyadmin
-docker build -t my_phpmyadmin .
-kubectl apply -f phpmyadmin.yaml
+docker build -t my_phpmyadmin srcs/phpmyadmin/
+kubectl apply -f srcs/phpmyadmin/phpmyadmin.yaml
+
 #screen -dmS dash minikube dashboard

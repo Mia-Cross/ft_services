@@ -9,4 +9,4 @@ RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/re
 
 RUN mkdir /etc/telegraf && mv telegraf.conf /etc/telegraf/
 
-CMD telegraf ; sh
+CMD telegraf

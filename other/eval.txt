@@ -9,15 +9,12 @@ kubectl get services :
 ____________________________________________
 											\
 RESTE A FAIRE :								 \
-Setup un container telegraf					  \
-Setup un container influxdb					   \
-Setup un container grafana					    \
-Creer un dashboard par container			     |
-Mettre le HTTPS et gerer les redirections	    /
-Difference SSH / SSL ???					   /
+Creer un dashboard grafana par container	  \
+Difference SSH / SSL ???					   |
 Setup un container ftps						  /
 Creer + de users sur wordpress ?			 /
 ____________________________________________/
+
 
 COMMANDES UTILES :
 
