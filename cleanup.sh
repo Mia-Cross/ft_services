@@ -5,7 +5,6 @@ kubectl delete -f srcs/wordpress/wordpress.yaml
 kubectl delete -f srcs/grafana/grafana.yaml
 kubectl delete -f srcs/influxdb/influxdb.yaml
 kubectl delete -f srcs/nginx/nginx.yaml
-kubectl delete -f srcs/telegraf/telegraf.yaml
 
 # supprimer les services
 #kubectl delete services wordpress

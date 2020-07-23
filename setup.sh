@@ -21,7 +21,7 @@ eval $(minikube docker-env)
 ##########################
 # telegraf
 docker build -t my_telegraf srcs/telegraf/
-kubectl apply -f srcs/telegraf/telegraf.yaml
+#kubectl apply -f srcs/telegraf/telegraf.yaml
 ##########################
 # nginx
 docker build -t my_nginx srcs/nginx/
