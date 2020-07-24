@@ -1,0 +1,44 @@
+SUR LES MACS DE L'ECOLE :
+
+0. Prérequis
+
+	0.0. Avoir un dossier perso dans le sgoinfre
+mkdir /sgoinfre/goinfre/Perso/mon_login
+chmod 700 /sgoinfre/goinfre/Perso/mon_login (restreint les droits des autres utilisateurs sur le dossier)
+
+	0.1. Avoir installé VirtualBox
+Dans le MSC (Managed Software Center) :
+Installer VirtualBox et VirtualBox Extension Pack
+
+1. Télécharger et importer la VM
+
+	1.0. Télécharger l'image
+curl https://cdn.42.fr/xubuntu-42.ova --output /sgoinfre/goinfre/Perso/mon_login/xubuntu-42.ova
+	1.1. Ouvrir l'image dans la VM
+open /sgoinfre/goinfre/Perso/mon_login/xubuntu-42.ova
+	1.2. Paramétrer le path
+Modifier le path en /sgoinfre/goinfre/Perso/mon_login/
+Cliquer sur Importer
+
+2. Démarrer la VM
+
+Dans VirtualBox, sélectionner "xubuntu" dans le panneau de gauche
+Cliquer sur la flèche verte Start
+Une fois qu'elle a démarré, si l'écran reste noir, rétrécir la fenêtre jusqu'a ce que l'écran de login s'affiche correctement
+
+3. Premiers réglages
+
+Accéder aux paramètres :
+Dans la VM en haut a gauche de l'écran, cliquer sur la petite souris bleue.
+
+
+
+	3.0. Paramétrer l'affichage
+
+
+
+RAPPELS SUR LA VM :
+- Utilisateur = user42 ; Mot de passe = user42
+- Impossible d'utiliser le pavé numérique
+- Copier/Coller depuis/dans un doc, un navigateur, etc = CTRL+C / CTRL+V
+- Copier/Coller depuis/dans un terminal = CTRL+MAJ+C / CTRL+MAJ+V
