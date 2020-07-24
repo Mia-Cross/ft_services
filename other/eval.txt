@@ -4,8 +4,8 @@ kubectl get services :
 >>	wordpress		5050		creation de sites et users
 >>	phpmyadmin		5000		permet d'accéder a la base de données
 >>	mysql			3306	gere la base de données
-	grafana			3000		dashboards des services tournant sur le serveur
-	influxdb		8086 ?		gere la base de données pour grafana
+>>	grafana			3000		dashboards des services tournant sur le serveur
+>>	influxdb		8086 ?		gere la base de données pour grafana
 ____________________________________________
 											\
 RESTE A FAIRE :								 \

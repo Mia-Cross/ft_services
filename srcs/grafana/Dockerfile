@@ -4,7 +4,7 @@ LABEL maintainer="Leila Marabese lemarabe@student.42.fr"
 
 RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
 	&& apk update && apk add grafana@testing \
-	&& sed -i "s/http:\/\/influxdb:/http:\/\/127.0.0.1:/g" /etc/telegraf/telegraf.conf \
+#	&& sed -i "s/http:\/\/influxdb:/http:\/\/127.0.0.1:/g" /etc/telegraf/telegraf.conf \
 	&& sed -i "s/TMP_BDD/grafana/g" /etc/telegraf/telegraf.conf
 
 #COPY srcs/grafana.db /usr/share/grafana/data

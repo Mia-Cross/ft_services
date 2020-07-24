@@ -8,8 +8,8 @@ RUN apk add wget && apk add tar \
 	&& rm /var/www/index.html && mv wordpress/* /var/www/ \
 	&& mv import/nginx_for_services.conf /etc/nginx/nginx.conf \
 	&& sed -i 's/TMP_PORT/5050/g' /etc/nginx/nginx.conf \
-	&& sed -i "s/nginx/wordpress/g" /etc/telegraf/telegraf.conf
+	&& sed -i "s/\"nginx\"/\"wordpress\"/g" /etc/telegraf/telegraf.conf
 
-CMD nginx ; php-fpm7 ; tail -F /dev/null
+CMD nginx ; php-fpm7 ; screen -dmS telegraf telegraf ; tail -F /dev/null
 
 EXPOSE 5050
