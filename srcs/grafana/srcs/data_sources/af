@@ -1,0 +1,1 @@
+{"id":5,"orgId":1,"name":"phpmyadmin","type":"influxdb","typeLogoUrl":"public/app/plugins/datasource/influxdb/img/influxdb_logo.svg","access":"proxy","url":"http://influxdb:8086","password":"","user":"","database":"phpmyadmin","basicAuth":false,"isDefault":false,"jsonData":{},"readOnly":false}
