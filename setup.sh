@@ -31,8 +31,8 @@ eval $(minikube docker-env)
 #kubectl apply -f srcs/influxdb/influxdb.yaml
 ##########################
 # grafana
-docker build -t my_grafana srcs/grafana/
-kubectl apply -f srcs/grafana/grafana.yaml
+#docker build -t my_grafana srcs/grafana/
+#kubectl apply -f srcs/grafana/grafana.yaml
 ##########################
 # mysql
 #docker build -t my_mysql srcs/mysql/
@@ -45,5 +45,9 @@ kubectl apply -f srcs/grafana/grafana.yaml
 # phpmyadmin
 #docker build -t my_phpmyadmin srcs/phpmyadmin/
 #kubectl apply -f srcs/phpmyadmin/phpmyadmin.yaml
+##########################
+# ftps
+docker build -t my_ftps srcs/ftps/
+kubectl apply -f srcs/ftps/ftps.yaml
 
 #screen -dmS dash minikube dashboard

@@ -14,6 +14,15 @@ Setup un container ftps						  /
 Creer + de users sur wordpress ?			 /
 ____________________________________________/
 
+WHERE WE AT ??
+Le deployment ftps ne pose pas de probleme, un netstat -paunt dans le container
+indique bien qu'il listen le port 21 (et telegraf aussi)
+Cependant.......
+	'No Data Available' dans la datasource de grafana (ptet qu'il faut rebuild le dashboard)
+	Le port 21 est interdit a la navigation...
+	> D'ou le port 30000 ?
+	Peut etre aussi qu'il faut set un mot de passe pour userftps ...?
+
 
 COMMANDES UTILES :
 
@@ -50,6 +59,12 @@ Grafana contient (en theorie) :
 	/usr/bin/grafana-cli
 	/usr/sbin/grafana-server
 * des exemples de conf (/usr/share/grafana/conf)
+
+Vsftpd contient :
+* etc/vsftpd/vsftpd.conf
+* /usr/sbin/vsftpd
+* /etc/init.d/vsftpd
+* /etc/conf.d/vsftpd
 
 POUR PLUS TARD:
 
@@ -111,3 +126,26 @@ docker run --name mysql-db -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=mukit mysql:la
 docker pull phpmyadmin/phpmyadmin:latest
 docker run --name my-own-phpmyadmin -d --link mysql-db:db -p 8081:80 phpmyadmin/phpmyadmin
 >> ACCESS PHPMYADMIN @ http://localhost:8081
+______________________________________________
+apk add vsftpd
+cat <<EOF | tee /etc/vsftpd/vsftpd.conf
+listen=YES
+local_enable=YES
+xferlog_enable=YES
+connect_from_port_20=YES
+pam_service_name=vsftpd
+seccomp_sandbox=NO
+
+# Enable upload by local user.
+write_enable=YES
+
+# Enable read by anonymous user (without username and password).
+secure_chroot_dir=/var/empty
+anonymous_enable=YES
+anon_root=/srv/ftp
+no_anon_password=YES
+EOF
+mkdir /srv/ftp
+chown nobody:nogroup /srv/ftp
+echo "anon" | tee /srv/ftp/anon.txt
+_________________________________________________

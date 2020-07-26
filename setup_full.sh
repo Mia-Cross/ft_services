@@ -45,5 +45,9 @@ kubectl apply -f srcs/wordpress/wordpress.yaml
 # phpmyadmin
 docker build -t my_phpmyadmin srcs/phpmyadmin/
 kubectl apply -f srcs/phpmyadmin/phpmyadmin.yaml
+##########################
+# ftps
+docker build -t my_ftps srcs/ftps/
+kubectl apply -f srcs/ftps/ftps.yaml
 
 screen -dmS dash minikube dashboard
