@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 9,
   "links": [],
   "panels": [
     {
@@ -24,7 +24,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "phpmyadmin",
-      "description": "Monitoring PhpMyAdmin Pod",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -54,7 +53,7 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "percentage": false,
-      "pluginVersion": "7.1.0",
+      "pluginVersion": "7.1.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -64,7 +63,6 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "CPU Usage",
           "groupBy": [
             {
               "params": [
@@ -79,7 +77,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "cpu",
+          "measurement": "system",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -88,7 +86,7 @@
             [
               {
                 "params": [
-                  "usage_user"
+                  "n_cpus"
                 ],
                 "type": "field"
               },
@@ -101,7 +99,6 @@
           "tags": []
         },
         {
-          "alias": "Processes running",
           "groupBy": [
             {
               "params": [
@@ -116,7 +113,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "processes",
+          "measurement": "system",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "B",
@@ -125,7 +122,7 @@
             [
               {
                 "params": [
-                  "running"
+                  "load1"
                 ],
                 "type": "field"
               },
@@ -142,7 +139,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "PhpMyAdmin",
+      "title": "PhpMyAdmin Activity",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -204,7 +201,7 @@
     ]
   },
   "timezone": "",
-  "title": "PhpMyAdmin_dash",
-  "uid": "TnMbSZVMk",
-  "version": 2
+  "title": "PhpMyAdmin",
+  "uid": "zoDjyHVGk",
+  "version": 1
 }

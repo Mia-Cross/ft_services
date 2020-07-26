@@ -9,8 +9,7 @@ kubectl get services :
 ____________________________________________
 											\
 RESTE A FAIRE :								 \
-Creer un dashboard grafana par container	  \
-Difference SSH / SSL ???					   |
+Difference SSH / SSL ???					  \
 Setup un container ftps						  /
 Creer + de users sur wordpress ?			 /
 ____________________________________________/

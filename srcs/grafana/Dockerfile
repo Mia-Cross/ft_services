@@ -6,10 +6,11 @@ COPY srcs import
 
 RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
 	&& apk update && apk add curl && apk add grafana@testing \
-	&& sed -i "s/TMP_BDD/grafana/g" /etc/telegraf/telegraf.conf
+	&& sed -i "s/TMP_BDD/grafana/g" /etc/telegraf/telegraf.conf \
+	&& mv import/provisioning /usr/share/grafana/
 
-#COPY srcs/grafana.db /usr/share/grafana/data
-
-CMD screen -dmS telegraf telegraf ; screen -dmS grafana grafana-server --homepath "usr/share/grafana"; sh import/import_datasources.sh ; tail -F /dev/null
+CMD screen -dmS telegraf telegraf ; \
+	screen -dmS grafana grafana-server --homepath "usr/share/grafana" \
+	--config "import/grafana.ini"; tail -F /dev/null
 
 EXPOSE 3000
