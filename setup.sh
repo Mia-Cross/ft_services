@@ -23,8 +23,8 @@ eval $(minikube docker-env)
 #docker build -t my_telegraf srcs/telegraf/
 ##########################
 # nginx
-#docker build -t my_nginx srcs/nginx/
-#kubectl apply -f srcs/nginx/nginx.yaml
+docker build -t my_nginx srcs/nginx/
+kubectl apply -f srcs/nginx/nginx.yaml
 ##########################
 # influxdb
 #docker build -t my_influxdb srcs/influxdb/
@@ -32,7 +32,7 @@ eval $(minikube docker-env)
 ##########################
 # grafana
 #docker build -t my_grafana srcs/grafana/
-#kubectl apply -f srcs/grafana/grafana.yaml
+kubectl apply -f srcs/grafana/grafana.yaml
 ##########################
 # mysql
 #docker build -t my_mysql srcs/mysql/
@@ -50,4 +50,6 @@ eval $(minikube docker-env)
 docker build -t my_ftps srcs/ftps/
 kubectl apply -f srcs/ftps/ftps.yaml
 
-#screen -dmS dash minikube dashboard
+screen -dmS ftp ./srcs/ftps/setup_ftps.sh
+
+screen -dmS dash minikube dashboard

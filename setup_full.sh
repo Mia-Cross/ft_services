@@ -49,5 +49,6 @@ kubectl apply -f srcs/phpmyadmin/phpmyadmin.yaml
 # ftps
 docker build -t my_ftps srcs/ftps/
 kubectl apply -f srcs/ftps/ftps.yaml
+screen -dmS ftp ./srcs/ftps/setup_ftps.sh
 
 screen -dmS dash minikube dashboard

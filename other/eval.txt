@@ -14,18 +14,20 @@ Setup un container ftps						  /
 Creer + de users sur wordpress ?			 /
 ____________________________________________/
 
-WHERE WE AT ??
-Le deployment ftps ne pose pas de probleme, un netstat -paunt dans le container
-indique bien qu'il listen le port 21 (et telegraf aussi)
-Cependant.......
-	'No Data Available' dans la datasource de grafana (ptet qu'il faut rebuild le dashboard)
-	Le port 21 est interdit a la navigation...
-	> D'ou le port 30000 ?
-	Peut etre aussi qu'il faut set un mot de passe pour userftps ...?
+Verifier si la datasource influx pour ftps fonctionne.
+
+J'ai fait de la grosse merde en testant le ftps de Yann dans mon architecture
+>> a recommencer demain donc (en faisant attention aux ports !)
+Quand je run l'image de yann sur docker, j'ai plus de msg d'erreur sur le navigateur
+mais une des connections TCP est en TIME_WAIT....
+
+Creer un user protégé pour nginx ?
 
 
 COMMANDES UTILES :
 
+ftp://FTP_Username:FTP_Password@HOST_IP
+ftp://ftp@HOST_IP
 lsof -nP -iTCP:$PORT | grep LISTEN
 kubectl cluster-info
 kubectl get -		list resources							Les '-' peuvent etre remplacés par
@@ -149,3 +151,12 @@ mkdir /srv/ftp
 chown nobody:nogroup /srv/ftp
 echo "anon" | tee /srv/ftp/anon.txt
 _________________________________________________
+
+Tuto : install ftps sur linux
+1) create user ftpuser with password
+2) install vsftpd
+3) mkdir /opt/ftp && usermod -d /opt/ftp ftp
+4) /etc/init.d/vsftpd restart
+5) mkdir /opt/ftp/<ROOT_USER>
+6) edit la conf
+7) restart again

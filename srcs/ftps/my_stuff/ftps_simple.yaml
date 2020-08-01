@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ftps-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ftps
+  template:
+    metadata:
+      labels:
+        app: ftps
+    spec:
+      containers:
+      - image: my_ftps
+        imagePullPolicy: Never
+        name: ftps
+        ports:
+        - containerPort: 21
+        - containerPort: 36000
+        volumeMounts:
+        - name: ftps-data
+          mountPath: /var/lib/ftps
+      volumes:
+      - name: ftps-data
+        persistentVolumeClaim:
+          claimName: ftps-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ftps
+spec:
+  type: LoadBalancer
+  ports:
+  - name: ftps-21
+    port: 21
+    targetPort: 21
+    protocol: TCP
+  - name: ftps-36000
+    port: 36000
+    targetPort: 36000
+    protocol: TCP
+  selector:
+    app: ftps
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ftps-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
