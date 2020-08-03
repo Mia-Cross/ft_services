@@ -1,9 +1,19 @@
 #!/bin/bash
 
 ##########################
-# demarrer le cluster ou clean le build precedent ?
-minikube start --vm-driver="virtualbox"
+# demarrer le cluster
+
+## sur MAC :
+#minikube start --vm-driver="virtualbox" 
 #bash cleanup.sh
+
+## dans la VM :
+#NEED 2 CPUs TO WORK PROPERLY !!!
+#verifier si screen est installee
+#service docker start
+#sudo usermod -aG docker $USER && newgrp docker
+minikube start --driver=docker
+
 
 ############################
 # load-balancer : MetalLB

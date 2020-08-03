@@ -31,7 +31,7 @@ kubectl apply -f srcs/nginx/nginx.yaml
 #kubectl apply -f srcs/influxdb/influxdb.yaml
 ##########################
 # grafana
-#docker build -t my_grafana srcs/grafana/
+docker build -t my_grafana srcs/grafana/
 kubectl apply -f srcs/grafana/grafana.yaml
 ##########################
 # mysql

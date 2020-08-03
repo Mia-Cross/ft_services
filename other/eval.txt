@@ -10,19 +10,22 @@ ____________________________________________
 											\
 RESTE A FAIRE :								 \
 Difference SSH / SSL ???					  \
-Setup un container ftps						  /
+Fix ftps problems						   	  /
 Creer + de users sur wordpress ?			 /
 ____________________________________________/
 
-Verifier si la datasource influx pour ftps fonctionne.
-
-J'ai fait de la grosse merde en testant le ftps de Yann dans mon architecture
->> a recommencer demain donc (en faisant attention aux ports !)
-Quand je run l'image de yann sur docker, j'ai plus de msg d'erreur sur le navigateur
+FTPS PROBLEMS :
+* Verifier si la datasource influx pour ftps fonctionne.
+>> Non. Est ce qu'il faut reconfigurer la data source ?
+* Quand je run l'image de yann sur docker, j'ai plus de msg d'erreur sur le navigateur
 mais une des connections TCP est en TIME_WAIT....
+* Creer un user protégé pour nginx ?
 
-Creer un user protégé pour nginx ?
-
+VM PROBLEMS :
+* Grafana inaccessible :
+netstat > n'ecoute que les IPv6 sur le port 3000, c'est normal ??
+* Nginx ne se lance pas :
+cf toutes les merdes avec rc-service mes couilles....
 
 COMMANDES UTILES :
 
@@ -45,6 +48,12 @@ docker ps (-a)		voir les containers la où t'es
 docker exec -it <CONTAINER> sh
 					-> rentrer dans un container
 
+Vsftpd contient :
+* etc/vsftpd/vsftpd.conf
+* /usr/sbin/vsftpd
+* /etc/init.d/vsftpd
+* /etc/conf.d/vsftpd
+
 InfluxDB contient :
 * un .conf (/etc/influxdb.conf)
 * des executables dans bin :
@@ -61,37 +70,6 @@ Grafana contient (en theorie) :
 	/usr/bin/grafana-cli
 	/usr/sbin/grafana-server
 * des exemples de conf (/usr/share/grafana/conf)
-
-Vsftpd contient :
-* etc/vsftpd/vsftpd.conf
-* /usr/sbin/vsftpd
-* /etc/init.d/vsftpd
-* /etc/conf.d/vsftpd
-
-POUR PLUS TARD:
-
-* Liste des addons de MINIKUBE = minikube addons list
-addon-manager: enabled
-dashboard: enabled
-default-storageclass: enabled
-efk: disabled
-freshpod: disabled
-gvisor: disabled
-helm-tiller: disabled
-ingress: disabled
-ingress-dns: disabled
-logviewer: disabled
-metrics-server: disabled
-nvidia-driver-installer: disabled
-nvidia-gpu-device-plugin: disabled
-registry: disabled
-registry-creds: disabled
-storage-provisioner: enabled
-storage-provisioner-gluster: disabled
-
-* Utile pour les metrics ??
-minikube addons enable metrics-server
-
 
 
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
