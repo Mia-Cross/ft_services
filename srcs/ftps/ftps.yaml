@@ -1,9 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ftps
-  labels:
-    app: ftps
+  name: ftps-deployment
 spec:
   selector:
     matchLabels:
@@ -14,17 +12,19 @@ spec:
         app: ftps
     spec:
       containers:
-      - name: ftps
-        image: my_ftps
+      - image: my_ftps
         imagePullPolicy: Never
+        name: ftps
         ports:
         - containerPort: 21
-        - containerPort: 30000
-        livenessProbe:
-          tcpSocket:
-            port: 21
-          initialDelaySeconds: 60
-          periodSeconds: 20
+        - containerPort: 36000
+        volumeMounts:
+        - name: ftps-data
+          mountPath: /var/run/vsftpd/empty
+      volumes:
+      - name: ftps-data
+        persistentVolumeClaim:
+          claimName: ftps-pv-claim
 ---
 apiVersion: v1
 kind: Service
@@ -33,13 +33,24 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 21
+  - name: ftps-21
+    port: 21
     targetPort: 21
     protocol: TCP
-    name: 21-ftps
-  - port: 30000
-    targetPort: 30000
+  - name: ftps-36000
+    port: 36000
+    targetPort: 36000
     protocol: TCP
-    name: 30000-ftps
   selector:
     app: ftps
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ftps-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi

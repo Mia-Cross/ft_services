@@ -1,34 +1,37 @@
-kubectl get services :
->>	nginx			80/443		serveur
-	ftps			21			echange de fichiers
->>	wordpress		5050		creation de sites et users
->>	phpmyadmin		5000		permet d'accéder a la base de données
->>	mysql			3306	gere la base de données
->>	grafana			3000		dashboards des services tournant sur le serveur
->>	influxdb		8086 ?		gere la base de données pour grafana
+#########################
+#    O B J E C T I F    #
+######################################################################################
+#>>	nginx			80/443		serveur (SSH)
+#	ftps			21			echange de fichiers (SSL)
+#>>	wordpress		5050		creation de sites et users
+#>>	phpmyadmin		5000		permet d'accéder a la base de données
+#>>	mysql			3306	gere la base de données
+#>>	grafana			3000		dashboards des services tournant sur le serveur
+#>>	influxdb		8086 ?		gere la base de données pour grafana
+######################################################################################
 ____________________________________________
 											\
 RESTE A FAIRE :								 \
-Difference SSH / SSL ???					  \
-Fix ftps problems						   	  /
-Creer + de users sur wordpress ?			 /
+Fix ftps problems						   	  \
+Creer + de users sur wordpress                 |
+Liveness Probes                               /
+Adapter le tout sur Linux/VM                 /
 ____________________________________________/
 
 FTPS PROBLEMS :
-* Verifier si la datasource influx pour ftps fonctionne.
->> Non. Est ce qu'il faut reconfigurer la data source ?
-* Quand je run l'image de yann sur docker, j'ai plus de msg d'erreur sur le navigateur
-mais une des connections TCP est en TIME_WAIT....
 * Creer un user protégé pour nginx ?
+* Revoir les certifs SSL
 
 VM PROBLEMS :
+* Pas de commande 'minikube ip' sur Linux donc impossible de servir les requetes
 * Grafana inaccessible :
 netstat > n'ecoute que les IPv6 sur le port 3000, c'est normal ??
 * Nginx ne se lance pas :
 cf toutes les merdes avec rc-service mes couilles....
 
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 COMMANDES UTILES :
-
+//////////////////////////////////////////////////////////////////////////////////////////////
 ftp://FTP_Username:FTP_Password@HOST_IP
 ftp://ftp@HOST_IP
 lsof -nP -iTCP:$PORT | grep LISTEN
@@ -47,12 +50,52 @@ minikube ssh		rentrer dans le cluster Kubernetes
 docker ps (-a)		voir les containers la où t'es
 docker exec -it <CONTAINER> sh
 					-> rentrer dans un container
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+sudo modprobe -r rtl8723de && sudo modprobe rtl8723de ant_sel=2
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+		########
+		# FTPS #
+		########
 
 Vsftpd contient :
 * etc/vsftpd/vsftpd.conf
 * /usr/sbin/vsftpd
 * /etc/init.d/vsftpd
 * /etc/conf.d/vsftpd
+
+Tuto : install ftps sur linux
+1) create user ftpuser with password
+2) install vsftpd
+3) mkdir /opt/ftp && usermod -d /opt/ftp ftp
+4) /etc/init.d/vsftpd restart
+5) mkdir /opt/ftp/<ROOT_USER>
+6) edit la conf
+7) restart again
+
+apk add vsftpd
+cat <<EOF | tee /etc/vsftpd/vsftpd.conf
+listen=YES
+local_enable=YES
+xferlog_enable=YES
+connect_from_port_20=YES
+pam_service_name=vsftpd
+seccomp_sandbox=NO
+# Enable upload by local user.
+write_enable=YES
+# Enable read by anonymous user (without username and password).
+secure_chroot_dir=/var/empty
+anonymous_enable=YES
+anon_root=/srv/ftp
+no_anon_password=YES
+EOF
+mkdir /srv/ftp
+chown nobody:nogroup /srv/ftp
+echo "anon" | tee /srv/ftp/anon.txt
+
+		############
+		# INFLUXDB #
+		############
 
 InfluxDB contient :
 * un .conf (/etc/influxdb.conf)
@@ -64,6 +107,10 @@ InfluxDB contient :
 * un executable dans sbin : (daemon ??)
 	influxd
 
+		############
+		# GRAFANA  #
+		############
+
 Grafana contient (en theorie) :
 * un .ini (/etc/grafana.ini)
 * des executables :
@@ -71,19 +118,15 @@ Grafana contient (en theorie) :
 	/usr/sbin/grafana-server
 * des exemples de conf (/usr/share/grafana/conf)
 
-
-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-sudo modprobe -r rtl8723de && sudo modprobe rtl8723de ant_sel=2
-////////////////////////////////////////////////////////////////////
-
+		############
+		#   MYSQL  #
+		############
 
 # /usr/bin/mysql_install_db --user=mysql
 Installing MariaDB/MySQL system tables in './data' ...
 OK
-
 To start mysqld at boot time you have to copy
 support-files/mysql.server to the right place for your system
-
 Two all-privilege accounts were created.
 One is root@localhost, it has no password, but you need to
 be system 'root' user to connect. Use, for example, sudo mysql
@@ -91,13 +134,10 @@ The second is mysql@localhost, it has no password either, but
 you need to be the system 'mysql' user to connect.
 After connecting you can set the password, if you would need to be
 able to connect as any of these users with a password and without sudo
-
 You can start the MariaDB daemon with:
 cd '/usr' ; /usr/bin/mysqld_safe --datadir='./data'
-
 You can test the MariaDB daemon with mysql-test-run.pl
 cd '/usr/mysql-test' ; perl mysql-test-run.pl
-
 
 Tests docker pour MySQL/phpmyadmin
 NB : ca marche pareil avec -it au lieu de -d mais ca bloque un terminal par image
@@ -106,35 +146,3 @@ docker run --name mysql-db -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=mukit mysql:la
 docker pull phpmyadmin/phpmyadmin:latest
 docker run --name my-own-phpmyadmin -d --link mysql-db:db -p 8081:80 phpmyadmin/phpmyadmin
 >> ACCESS PHPMYADMIN @ http://localhost:8081
-______________________________________________
-apk add vsftpd
-cat <<EOF | tee /etc/vsftpd/vsftpd.conf
-listen=YES
-local_enable=YES
-xferlog_enable=YES
-connect_from_port_20=YES
-pam_service_name=vsftpd
-seccomp_sandbox=NO
-
-# Enable upload by local user.
-write_enable=YES
-
-# Enable read by anonymous user (without username and password).
-secure_chroot_dir=/var/empty
-anonymous_enable=YES
-anon_root=/srv/ftp
-no_anon_password=YES
-EOF
-mkdir /srv/ftp
-chown nobody:nogroup /srv/ftp
-echo "anon" | tee /srv/ftp/anon.txt
-_________________________________________________
-
-Tuto : install ftps sur linux
-1) create user ftpuser with password
-2) install vsftpd
-3) mkdir /opt/ftp && usermod -d /opt/ftp ftp
-4) /etc/init.d/vsftpd restart
-5) mkdir /opt/ftp/<ROOT_USER>
-6) edit la conf
-7) restart again
