@@ -1,7 +1,7 @@
 echo "Waiting for Address before launch ftps"
 while true
 do
-	if [ `kubectl exec deploy/ftps -- grep -H "FTPS_IP" /etc/vsftpd/vsftpd.conf` ]
+	if [ `kubectl exec deploy/ftps-deployment -- grep -H "FTPS_IP" /etc/vsftpd/vsftpd.conf` ]
 	then
 		IPFTPS=`kubectl get services/ftps -o=custom-columns='ADDRESS:status.loadBalancer.ingress[0].ip'|tail -n1`
 		while [ $IPFTPS = '<none>' ]
@@ -10,9 +10,9 @@ do
 			IPFTPS=`kubectl get services/ftps -o=custom-columns='ADDRESS:status.loadBalancer.ingress[0].ip'|tail -n1`
 		done
 
-		kubectl exec deploy/ftps -- pkill vsftpd
-		kubectl exec deploy/ftps -- sed -ie "s/FTPS_IP/$IPFTPS/g" /etc/vsftpd/vsftpd.conf
-		kubectl exec deploy/ftps -- screen -dmS ftps vsftpd /etc/vsftpd/vsftpd.conf
+		kubectl exec deploy/ftps-deployment -- pkill vsftpd
+		kubectl exec deploy/ftps-deployment -- sed -ie "s/FTPS_IP/$IPFTPS/g" /etc/vsftpd/vsftpd.conf
+		kubectl exec deploy/ftps-deployment -- screen -dmS ftps vsftpd /etc/vsftpd/vsftpd.conf
 	fi
 	sleep 10
 done

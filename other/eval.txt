@@ -24,6 +24,7 @@ FTPS PROBLEMS :
 
 VM PROBLEMS :
 * Pas de commande 'minikube ip' sur Linux donc impossible de servir les requetes
+>> il est fort probable que tous les autres soucis découlent de celui ci
 * Grafana inaccessible :
 netstat > n'ecoute que les IPv6 sur le port 3000, c'est normal ??
 * Nginx ne se lance pas :

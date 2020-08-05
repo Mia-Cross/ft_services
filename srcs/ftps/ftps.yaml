@@ -18,13 +18,6 @@ spec:
         ports:
         - containerPort: 21
         - containerPort: 36000
-        volumeMounts:
-        - name: ftps-data
-          mountPath: /var/run/vsftpd/empty
-      volumes:
-      - name: ftps-data
-        persistentVolumeClaim:
-          claimName: ftps-pv-claim
 ---
 apiVersion: v1
 kind: Service
@@ -43,14 +36,3 @@ spec:
     protocol: TCP
   selector:
     app: ftps
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: ftps-pv-claim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 3Gi

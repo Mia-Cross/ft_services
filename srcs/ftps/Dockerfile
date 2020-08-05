@@ -6,6 +6,8 @@ COPY srcs import
 
 RUN apk add vsftpd openssl && adduser -D userftps \
     && mv import/vsftpd.conf /etc/vsftpd/ \
+    && mv /import/ssl/certs/* /etc/ssl/certs/ \
+    && mv /import/ssl/private/* /etc/ssl/private/ \
     && mkdir -p /home/userftps/ftp /var/run/vsftpd/empty \
     && chown nobody:nogroup /home/userftps/ftp && chmod a-w /home/userftps/ftp \
     && mv import/vsftpd.userlist /etc/vsftpd/vsftpd.userlist \

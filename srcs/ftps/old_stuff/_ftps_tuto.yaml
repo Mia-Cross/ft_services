@@ -20,7 +20,7 @@ spec:
         - containerPort: 36000
         volumeMounts:
         - name: ftps-data
-          mountPath: /var/lib/ftps
+          mountPath: /var/run/vsftpd/empty
       volumes:
       - name: ftps-data
         persistentVolumeClaim:
@@ -54,15 +54,3 @@ spec:
   resources:
     requests:
       storage: 3Gi
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: ftps-pv-volume
-spec:
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/tmp/data"

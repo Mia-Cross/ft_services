@@ -18,8 +18,6 @@ minikube start --vm-driver="virtualbox"
 # obtenir l'IP de Minikube puis passer dans l'env docker de minikube
 cp srcs/metallb/config_base.yaml srcs/metallb/config.yaml
 sed -ie "s/MINIKUBE_IP/$(minikube ip)/g" srcs/metallb/config.yaml
-cp srcs/ftps/srcs/vsftpd_base.conf srcs/ftps/srcs/vsftpd.conf
-sed -ie "s/MINIKUBE_IP/$(minikube ip)/g" srcs/ftps/srcs/vsftpd.conf
 eval $(minikube docker-env)
 
 ############################
@@ -67,5 +65,5 @@ echo "Waiting until Dashboard launch"
 sleep 10
 screen -dmS dash minikube dashboard
 echo -n "Trying to get FTPS IP... "
-screen -dmS ftp ./srcs/ftps/srcs/setup_ftps.sh
+screen -dmS ftp ./srcs/ftps/srcs/get_ftps_ip.sh
 echo "Done ! You're all set :)"
