@@ -1,26 +1,56 @@
 #########################
 #    O B J E C T I F    #
 ######################################################################################
-#>>	nginx			80/443		serveur (SSH)
-#	ftps			21			echange de fichiers (SSL)
-#>>	wordpress		5050		creation de sites et users
-#>>	phpmyadmin		5000		permet d'accéder a la base de données
-#>>	mysql			3306	gere la base de données
-#>>	grafana			3000		dashboards des services tournant sur le serveur
-#>>	influxdb		8086 ?		gere la base de données pour grafana
+# >>	nginx			80/443		serveur (SSH)
+#   	ftps			21			echange de fichiers (SSL)
+# >>	wordpress		5050		creation de sites et users
+# >>	phpmyadmin		5000		permet d'accéder a la base de données
+# >>	mysql			3306	gere la base de données
+# >>	grafana			3000		dashboards des services tournant sur le serveur
+# >>	influxdb		8086 ?		gere la base de données pour grafana
 ######################################################################################
 ____________________________________________
 											\
 RESTE A FAIRE :								 \
-Fix ftps problems						   	  \
-Creer + de users sur wordpress                 |
+Can't upload file FTPS
+Creer + de users sur wordpress                \
 Liveness Probes                               /
 Adapter le tout sur Linux/VM                 /
 ____________________________________________/
++ CLEAN-UP ALL MY SHIT...
+Dashboard FTPS a actualiser
 
-FTPS PROBLEMS :
-* Creer un user protégé pour nginx ?
-* Revoir les certifs SSL
+Ce que j'ai bougé qui pourrait faire merder :
+- deplacement exec telegraf et vsftpd dans script
+- allow_writeable_chroot=YES
+- port range dans yaml + vsftpd.conf
+
+FINALLY WORKING !!!!!! with config as follows :
+allow_writeable_chroot=YES
+Port-range
+chmod 6777 home/userftps/ftp (pas sur que ca ait une influence)
+
+* Avec chmod a-x :
+drwxr-xr-x    1 root     root          4096 Aug 12 17:26 home/
+drwxr-sr-x    3 userftps userftps      4096 Aug 12 17:26 home/userftps/
+dr-xr-sr-x    2 nobody   nogroup       4096 Aug 12 17:26 home/userftps/ftp
+* Avec chmod 4755 :
+drwxr-xr-x    1 root     root          4096 Aug 12 17:49 ..
+drwxr-sr-x    3 userftps userftps      4096 Aug 12 17:49 .
+drwsr-xr-x    2 nobody   nogroup       4096 Aug 12 17:49 ftp
+* Avec chmod 2755 :
+drwxr-xr-x    1 root     root          4096 Aug 12 18:42 ..
+drwxr-sr-x    3 userftps userftps      4096 Aug 12 18:42 .
+drwxr-sr-x    2 nobody   nogroup       4096 Aug 12 18:42 ftp
+
+/ # ls -la home/userftps/ftp/
+total 28
+drwsr-xr-x    1 nobody   nogroup       4096 Aug 12 20:47 .
+drwxr-sr-x    1 userftps userftps      4096 Aug 12 19:42 ..
+-rwsr-xr-x    1 root     root            44 Aug 12 19:42 boss.txt
+-rwsr-xr-x    1 userftps nogroup       2585 Aug 12 20:47 correction.c
+-rwxr-xr-x    1 userftps nogroup       2089 Aug 12 20:51 subject.en.txt
+
 
 VM PROBLEMS :
 * Pas de commande 'minikube ip' sur Linux donc impossible de servir les requetes
@@ -51,6 +81,11 @@ minikube ssh		rentrer dans le cluster Kubernetes
 docker ps (-a)		voir les containers la où t'es
 docker exec -it <CONTAINER> sh
 					-> rentrer dans un container
+screen -ls          liste les sessions screen
+screen -X -S <session_number> quit
+					kill la session donnée
+screen -ls | grep Detached | cut -d. -f1 | awk '{print $1}' | xargs kill
+					kill toutes les sessions Detached
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 sudo modprobe -r rtl8723de && sudo modprobe rtl8723de ant_sel=2
 //////////////////////////////////////////////////////////////////////////////////////////////

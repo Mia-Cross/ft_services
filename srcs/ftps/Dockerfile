@@ -9,14 +9,13 @@ RUN apk add vsftpd openssl && adduser -D userftps \
     && mv /import/ssl/certs/* /etc/ssl/certs/ \
     && mv /import/ssl/private/* /etc/ssl/private/ \
     && mkdir -p /home/userftps/ftp /var/run/vsftpd/empty \
-    && chown nobody:nogroup /home/userftps/ftp && chmod a-w /home/userftps/ftp \
+    && chown nobody:nogroup /home/userftps/ftp && chmod 6777 /home/userftps/ftp \
     && mv import/vsftpd.userlist /etc/vsftpd/vsftpd.userlist \
-    && echo "If you can see this Im a FUCKING BOSS" > /home/userftps/ftp/boss.txt \
+    && echo "If you can see this Im a M_TH_RF_CK_NG BOSS" > /home/userftps/ftp/boss.txt \
 	&& sed -i "s/TMP_BDD/ftps/g" /etc/telegraf/telegraf.conf
 #    && mv import/confd /etc/conf.d/vsftpd \
 
-CMD sh import/define_user_pswd.sh ; \
-    screen -dmS telegraf telegraf ; \
-    screen -dmS ftps vsftpd /etc/vsftpd/vsftpd.conf ; tail -F /dev/null
+CMD sh import/start_ftps_as_user.sh ; \
+    tail -F /dev/null
 
 EXPOSE 21 36000
