@@ -8,14 +8,43 @@ if [ $SYSTEM = 'Linux' ]
 then
     VM_DRIVER="docker"
     NB_CORES=2
-    sudo apt-get install screen
-    #service docker start
-    #sudo usermod -aG docker $USER && newgrp docker
+    CMD="sudo apt-get"
+    if [[ $(groups | grep docker) = '' ]]
+    then
+        sudo usermod -aG docker $USER && newgrp docker
+    fi
+    if [[ $(service docker status | grep running) = '' ]]
+    then
+        service docker start
+        while [[ $(service docker status | grep running) = '' ]]
+        do
+            sleep 1
+        done
+    fi
 else
     VM_DRIVER="virtualbox"
     NB_CORES=4
+    CMD="brew"
+    if [[ $(launchctl list | grep docker.docker) = '' ]]
+    then
+        ## exec 42toolbox script
+        while [[ $(launchctl list | grep docker.docker) = '' ]]
+        do
+            sleep 1
+        done
+    fi
+fi
+if [ `which screen` = 'screen not found' ]
+then
+    $CMD install screen
+fi
+if [ `which filezilla` = 'filezilla not found' ]
+then
+    $CMD install filezilla
+    #enfait ca va pas marcher sur mac, faut DL a la main
 fi
 minikube start --vm-driver=$VM_DRIVER --cpus=$NB_CORES
+screen -dmS filezilla filezilla
 
 ######################################
 #      CLEAN-UP PREVIOUS BUILD ?     #
