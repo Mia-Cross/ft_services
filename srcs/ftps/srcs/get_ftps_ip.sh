@@ -1,4 +1,3 @@
-echo "Waiting for Address before launch ftps"
 while true
 do
 	if [ `kubectl exec deploy/ftps-deployment -- grep -H "FTPS_IP" /etc/vsftpd/vsftpd.conf` ]

@@ -19,15 +19,6 @@ spec:
         - containerPort: 21
         - containerPort: 36000
         - containerPort: 36001
-        - containerPort: 36002
-        - containerPort: 36003
-        - containerPort: 36004
-        - containerPort: 36005
-        - containerPort: 36006
-        - containerPort: 36007
-        - containerPort: 36008
-        - containerPort: 36009
-        - containerPort: 36010
         livenessProbe:
           tcpSocket:
             port: 21
@@ -52,42 +43,6 @@ spec:
   - name: ftps-36001
     port: 36001
     targetPort: 36001
-    protocol: TCP
-  - name: ftps-36002
-    port: 36002
-    targetPort: 36002
-    protocol: TCP
-  - name: ftps-36003
-    port: 36003
-    targetPort: 36003
-    protocol: TCP
-  - name: ftps-36004
-    port: 36004
-    targetPort: 36004
-    protocol: TCP
-  - name: ftps-36005
-    port: 36005
-    targetPort: 36005
-    protocol: TCP
-  - name: ftps-36006
-    port: 36006
-    targetPort: 36006
-    protocol: TCP
-  - name: ftps-36007
-    port: 36007
-    targetPort: 36007
-    protocol: TCP
-  - name: ftps-36008
-    port: 36008
-    targetPort: 36008
-    protocol: TCP
-  - name: ftps-36009
-    port: 36009
-    targetPort: 36009
-    protocol: TCP
-  - name: ftps-36010
-    port: 36010
-    targetPort: 36010
     protocol: TCP
   selector:
     app: ftps

@@ -9,7 +9,7 @@ RUN apk add vsftpd openssl && adduser -D userftps \
     && mv /import/ssl/certs/* /etc/ssl/certs/ \
     && mv /import/ssl/private/* /etc/ssl/private/ \
     && mkdir -p /home/userftps/ftp /var/run/vsftpd/empty \
-    && chown nobody:nogroup /home/userftps/ftp && chmod 6777 /home/userftps/ftp \
+    && chown nobody:nogroup /home/userftps/ftp && chmod 777 /home/userftps/ftp \
     && mv import/vsftpd.userlist /etc/vsftpd/vsftpd.userlist \
     && echo "If you can see this Im a M_TH_RF_CK_NG BOSS" > /home/userftps/ftp/boss.txt \
 	&& sed -i "s/TMP_BDD/ftps/g" /etc/telegraf/telegraf.conf

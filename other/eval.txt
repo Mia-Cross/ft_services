@@ -12,45 +12,12 @@
 ____________________________________________
 											\
 RESTE A FAIRE :								 \
-Can't upload file FTPS
 Creer + de users sur wordpress                \
 Liveness Probes                               /
 Adapter le tout sur Linux/VM                 /
 ____________________________________________/
 + CLEAN-UP ALL MY SHIT...
 Dashboard FTPS a actualiser
-
-Ce que j'ai bougé qui pourrait faire merder :
-- deplacement exec telegraf et vsftpd dans script
-- allow_writeable_chroot=YES
-- port range dans yaml + vsftpd.conf
-
-FINALLY WORKING !!!!!! with config as follows :
-allow_writeable_chroot=YES
-Port-range
-chmod 6777 home/userftps/ftp (pas sur que ca ait une influence)
-
-* Avec chmod a-x :
-drwxr-xr-x    1 root     root          4096 Aug 12 17:26 home/
-drwxr-sr-x    3 userftps userftps      4096 Aug 12 17:26 home/userftps/
-dr-xr-sr-x    2 nobody   nogroup       4096 Aug 12 17:26 home/userftps/ftp
-* Avec chmod 4755 :
-drwxr-xr-x    1 root     root          4096 Aug 12 17:49 ..
-drwxr-sr-x    3 userftps userftps      4096 Aug 12 17:49 .
-drwsr-xr-x    2 nobody   nogroup       4096 Aug 12 17:49 ftp
-* Avec chmod 2755 :
-drwxr-xr-x    1 root     root          4096 Aug 12 18:42 ..
-drwxr-sr-x    3 userftps userftps      4096 Aug 12 18:42 .
-drwxr-sr-x    2 nobody   nogroup       4096 Aug 12 18:42 ftp
-
-/ # ls -la home/userftps/ftp/
-total 28
-drwsr-xr-x    1 nobody   nogroup       4096 Aug 12 20:47 .
-drwxr-sr-x    1 userftps userftps      4096 Aug 12 19:42 ..
--rwsr-xr-x    1 root     root            44 Aug 12 19:42 boss.txt
--rwsr-xr-x    1 userftps nogroup       2585 Aug 12 20:47 correction.c
--rwxr-xr-x    1 userftps nogroup       2089 Aug 12 20:51 subject.en.txt
-
 
 VM PROBLEMS :
 * Pas de commande 'minikube ip' sur Linux donc impossible de servir les requetes
@@ -109,25 +76,22 @@ Tuto : install ftps sur linux
 6) edit la conf
 7) restart again
 
-apk add vsftpd
-cat <<EOF | tee /etc/vsftpd/vsftpd.conf
-listen=YES
-local_enable=YES
-xferlog_enable=YES
-connect_from_port_20=YES
-pam_service_name=vsftpd
-seccomp_sandbox=NO
-# Enable upload by local user.
-write_enable=YES
-# Enable read by anonymous user (without username and password).
-secure_chroot_dir=/var/empty
-anonymous_enable=YES
-anon_root=/srv/ftp
-no_anon_password=YES
-EOF
-mkdir /srv/ftp
-chown nobody:nogroup /srv/ftp
-echo "anon" | tee /srv/ftp/anon.txt
+Ce que j'ai bougé qui pourrait faire merder :
+- deplacement exec telegraf et vsftpd dans script
+- allow_writeable_chroot=YES
+- port range dans yaml + vsftpd.conf
+
+FINALLY WORKING !!!!!! with config as follows :
+allow_writeable_chroot=YES
+Port-range
+chmod 6777 home/userftps/ftp (pas sur que ca ait une influence)
+
+Permissions la fois ou ça a marché (chmod x777):
+drwsr-xr-x    1 nobody   nogroup       4096 Aug 12 20:47 home/userftps/ftp/
+drwxr-sr-x    1 userftps userftps      4096 Aug 12 19:42 home/userftps/
+-rwsr-xr-x    1 root     root            44 Aug 12 19:42 home/userftps/ftp/boss.txt
+-rwsr-xr-x    1 userftps nogroup       2585 Aug 12 20:47 home/userftps/ftp/correction.c     ajout
+-rwxr-xr-x    1 userftps nogroup       2089 Aug 12 20:51 home/userftps/ftp/subject.en.txt   ajout
 
 		############
 		# INFLUXDB #
