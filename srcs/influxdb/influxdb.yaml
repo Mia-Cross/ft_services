@@ -21,6 +21,12 @@ spec:
         volumeMounts:
         - name: influxdb-data
           mountPath: /var/lib/influxdb
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 8086
+          initialDelaySeconds: 60
+          periodSeconds: 20
       volumes:
       - name: influxdb-data
         persistentVolumeClaim:

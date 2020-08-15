@@ -8,7 +8,10 @@ if [ $SYSTEM = 'Linux' ]
 then
     VM_DRIVER="docker"
     NB_CORES=2
-    CMD="sudo apt-get"
+    if [ `which screen` = 'screen not found' ]
+    then
+        sudo apt-get install screen
+    fi
     if [[ $(groups | grep docker) = '' ]]
     then
         sudo usermod -aG docker $USER && newgrp docker
@@ -24,24 +27,23 @@ then
 else
     VM_DRIVER="virtualbox"
     NB_CORES=4
-    CMD="brew"
     if [[ $(launchctl list | grep docker.docker) = '' ]]
     then
-        ## exec 42toolbox script
+        bash srcs/init_docker.sh
         while [[ $(launchctl list | grep docker.docker) = '' ]]
         do
             sleep 1
         done
     fi
 fi
-if [ `which screen` = 'screen not found' ]
+if [[ `which filezilla` = 'filezilla not found' ]]
 then
-    $CMD install screen
-fi
-if [ `which filezilla` = 'filezilla not found' ]
-then
-    $CMD install filezilla
-    #enfait ca va pas marcher sur mac, faut DL a la main
+    if [ $SYSTEM = 'Linux' ]
+    then
+        sudo apt-get install filezilla
+    else
+        bash srcs/ftps/install_filezilla.sh
+    fi
 fi
 minikube start --vm-driver=$VM_DRIVER --cpus=$NB_CORES
 screen -dmS filezilla filezilla
@@ -101,10 +103,8 @@ kubectl apply -f srcs/wordpress/wordpress.yaml
 ##########################
 #    LAST ADJUSTMENTS    #
 ##########################
-#echo "Waiting 10 seconds in order to make the last adjusments"
-#sleep 10
-#screen -dmS dash minikube dashboard
-#echo "Dashboard launched !"
 screen -dmS ftp ./srcs/ftps/srcs/get_ftps_ip.sh
+echo ""
 echo "Getting IP for FTPS, it will be running shortly..."
 echo "Thank you for waiting :)"
+echo ""

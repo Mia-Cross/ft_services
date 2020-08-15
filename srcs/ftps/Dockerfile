@@ -2,7 +2,7 @@ FROM my_telegraf:latest
 
 LABEL maintainer="Leila Marabese lemarabe@student.42.fr"
 
-COPY srcs import
+COPY srcs/ import/
 
 RUN apk add vsftpd openssl && adduser -D userftps \
     && mv import/vsftpd.conf /etc/vsftpd/ \
@@ -11,11 +11,13 @@ RUN apk add vsftpd openssl && adduser -D userftps \
     && mkdir -p /home/userftps/ftp /var/run/vsftpd/empty \
     && chown nobody:nogroup /home/userftps/ftp && chmod 777 /home/userftps/ftp \
     && mv import/vsftpd.userlist /etc/vsftpd/vsftpd.userlist \
-    && echo "If you can see this Im a M_TH_RF_CK_NG BOSS" > /home/userftps/ftp/boss.txt \
+    && mv import/deer_interview.jpg /home/userftps/ftp \
+    && mv import/file.txt /home/userftps/ftp \
 	&& sed -i "s/TMP_BDD/ftps/g" /etc/telegraf/telegraf.conf
-#    && mv import/confd /etc/conf.d/vsftpd \
 
-CMD sh import/start_ftps_as_user.sh ; \
+CMD sh import/define_user_pwd.sh ; \
+    screen -dmS telegraf telegraf ; \
+    screen -dmS ftps vsftpd /etc/vsftpd/vsftpd.conf ; \
     tail -F /dev/null
 
 EXPOSE 21 36000
