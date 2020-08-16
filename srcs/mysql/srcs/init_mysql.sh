@@ -12,14 +12,11 @@ fi
 chown -R mysql:mysql /run/mysqld
 chown -R mysql:mysql /var/log/mysql
 chown -R mysql:mysql /var/lib/mysql
-echo "1"
 mysql_install_db --user=mysql --ldata=/var/lib/mysql > /dev/null
-echo "2"
 tfile=`mktemp`
 if [ ! -f "$tfile" ]; then
     return 1
 fi
-echo "3"
 cat << EOF > $tfile
 USE mysql;
 FLUSH PRIVILEGES;
@@ -28,13 +25,18 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
 ALTER USER 'root'@'localhost' IDENTIFIED BY '';
 CREATE USER 'user'@'%' IDENTIFIED BY 'random';
 GRANT ALL ON *.* TO 'user'@'%';
+CREATE USER 'other'@'%' IDENTIFIED BY 'other';
+GRANT ALL ON *.* TO 'other '@'%';
 CREATE DATABASE wordpress;
 FLUSH PRIVILEGES;
 EOF
-echo "4"
 /usr/bin/mysqld --user=mysql --bootstrap --verbose=0 < $tfile
 rm -f $tfile
-echo "5"
-#exec /usr/bin/mysqld --user=mysql --console
 screen -dmS mysql /usr/bin/mysqld --user=mysql --console
-echo "6"
+###############
+#while [ ! `mysqladmin ping` ]
+#while !(mysqladmin ping)
+#do
+#  sleep 1
+#done
+#mysql -u root wordpress < import/wordpress_db.sql

@@ -1,23 +1,55 @@
 #!/bin/bash
 
 ##############################################
-#   START THE CLUSTER (depending on the OS)  #
+#        INSTALL ALL NEEDED COMPONENTS       #
 ##############################################
 SYSTEM=`uname -s`
+if [[ ! `which minikube` ]] || [[ `which minikube` = 'minikube not found' ]]
+then
+    echo "Minikube not found, installing..."
+    if [ $SYSTEM = 'Linux' ]
+    then
+        snap install minikube
+    else
+        brew install minikube
+    fi
+fi
+if [[ ! `which screen` ]] || [[ `which screen` = 'screen not found' ]]
+then
+    echo "Screen not found, installing..."
+    if [ $SYSTEM = 'Linux' ]
+    then
+        sudo apt-get install screen
+    else
+        brew install screen
+    fi
+fi
+if [[ ! `which filezilla` ]] || [[ `which filezilla` = 'filezilla not found' ]]
+then
+    echo "FileZilla not found, installing..."
+    if [ $SYSTEM = 'Linux' ]
+    then
+        sudo apt-get install filezilla
+    else
+        tar -xjf srcs/ftps/FileZilla_3.49.1_macosx-x86.app.tar.bz2
+    fi
+fi
+
+##############################################
+#   START THE CLUSTER (depending on the OS)  #
+##############################################
 if [ $SYSTEM = 'Linux' ]
 then
     VM_DRIVER="docker"
     NB_CORES=2
-    if [ `which screen` = 'screen not found' ]
-    then
-        sudo apt-get install screen
-    fi
+    FZ_PATH=""
     if [[ $(groups | grep docker) = '' ]]
     then
         sudo usermod -aG docker $USER && newgrp docker
     fi
     if [[ $(service docker status | grep running) = '' ]]
     then
+        echo "Starting Docker service..."
         service docker start
         while [[ $(service docker status | grep running) = '' ]]
         do
@@ -27,8 +59,10 @@ then
 else
     VM_DRIVER="virtualbox"
     NB_CORES=4
+    FZ_PATH="./srcs/ftps/FileZilla.app/Contents/MacOS/"
     if [[ $(launchctl list | grep docker.docker) = '' ]]
     then
+        echo "Starting Docker service..."
         bash srcs/init_docker.sh
         while [[ $(launchctl list | grep docker.docker) = '' ]]
         do
@@ -36,28 +70,20 @@ else
         done
     fi
 fi
-if [[ `which filezilla` = 'filezilla not found' ]]
-then
-    if [ $SYSTEM = 'Linux' ]
-    then
-        sudo apt-get install filezilla
-    else
-        bash srcs/ftps/install_filezilla.sh
-    fi
-fi
-minikube start --vm-driver=$VM_DRIVER --cpus=$NB_CORES
-screen -dmS filezilla filezilla
+echo "Starting the cluster now..."
+minikube start --vm-driver=$VM_DRIVER --cpus=$NB_CORES --memory=5000
+screen -dmS filezilla ${FZ_PATH}filezilla
 
 ######################################
 #      CLEAN-UP PREVIOUS BUILD ?     #
 ######################################
-#kubectl delete -f srcs/ftps/ftps.yaml
-#kubectl delete -f srcs/grafana/grafana.yaml
-#kubectl delete -f srcs/influxdb/influxdb.yaml
-#kubectl delete -f srcs/mysql/mysql.yaml
-#kubectl delete -f srcs/nginx/nginx.yaml
-#kubectl delete -f srcs/phpmyadmin/phpmyadmin.yaml
-#kubectl delete -f srcs/wordpress/wordpress.yaml
+kubectl delete -f srcs/ftps/ftps.yaml
+kubectl delete -f srcs/grafana/grafana.yaml
+kubectl delete -f srcs/influxdb/influxdb.yaml
+kubectl delete -f srcs/mysql/mysql.yaml
+kubectl delete -f srcs/nginx/nginx.yaml
+kubectl delete -f srcs/phpmyadmin/phpmyadmin.yaml
+kubectl delete -f srcs/wordpress/wordpress.yaml
 
 ######################################
 # CONFIGURE METALLB AS LOAD-BALANCER #

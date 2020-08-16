@@ -12,10 +12,10 @@
 ____________________________________________
 											\
 RESTE A FAIRE :								 \
-Creer + de users sur wordpress                |
+Creer + de users sur wordpress                \
+Finir le script d'install filezilla           /
 Adapter le tout sur Linux/VM                 /
 ____________________________________________/
-+ CLEAN-UP ALL MY SHIT...
 
 VM PROBLEMS : (PASSER A 4 CPUS !!!!)
 * Pas de commande 'minikube ip' sur Linux donc impossible de servir les requetes

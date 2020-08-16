@@ -1,0 +1,24 @@
+################################################################################
+IDENTIFIANTS | CREDENTIALS
+
+################################################################################
+
+Passer sur l'env Docker de Minikube | Switch to the Minikube Docker env
+eval $(minikube docker-env)
+Quitter l'env Docker de Minikube | Leave the Minikube Docker env
+eval $(minikube docker-env -u)
+
+Savoir si un $PORT est occupé | Find out if a $PORT is in use
+lsof -nP -iTCP:$PORT | grep LISTEN
+
+Supprimer toutes les sessions screen detachées | Kill all detached screen sessions
+screen -ls | grep Detached | cut -d. -f1 | awk '{print $1}' | xargs kill
+
+Executer une commande dans un deploiement | Execute a command in a deployment
+kubectl exec deploy/<deployment_name> -- <command>
+
+Obtenir l'IP du FTPS | Get FTPS IP
+kubectl get services/ftps -o=custom-columns='ADDRESS:status.loadBalancer.ingress[0].ip'|tail -n1
+
+
+minikube config set memory <memory>
