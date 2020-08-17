@@ -1,7 +1,10 @@
-################################################################################
-IDENTIFIANTS | CREDENTIALS
-
-################################################################################
+#########################################################################
+IDENTIFIANTS | CREDENTIALS                                              #
+---------------------------                                             #
+            FTPS        GRAFANA     MYSQL   WORDPRESS   PHPMYADMIN      #
+username    userftps    admin       root    user        root            #
+password    simple      admin       meh     random      meh             #
+#########################################################################
 
 Passer sur l'env Docker de Minikube | Switch to the Minikube Docker env
 eval $(minikube docker-env)
