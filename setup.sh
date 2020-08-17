@@ -59,11 +59,11 @@ then
 else
     VM_DRIVER="virtualbox"
     NB_CORES=4
-    FZ_PATH="./srcs/ftps/FileZilla.app/Contents/MacOS/"
+    FZ_PATH="./FileZilla.app/Contents/MacOS/"
     if [[ $(launchctl list | grep docker.docker) = '' ]]
     then
         echo "Starting Docker service..."
-        bash srcs/init_docker.sh
+        launchctl start docker
         while [[ $(launchctl list | grep docker.docker) = '' ]]
         do
             sleep 1
@@ -77,13 +77,13 @@ screen -dmS filezilla ${FZ_PATH}filezilla
 ######################################
 #      CLEAN-UP PREVIOUS BUILD ?     #
 ######################################
-kubectl delete -f srcs/ftps/ftps.yaml
-kubectl delete -f srcs/grafana/grafana.yaml
-kubectl delete -f srcs/influxdb/influxdb.yaml
-kubectl delete -f srcs/mysql/mysql.yaml
-kubectl delete -f srcs/nginx/nginx.yaml
-kubectl delete -f srcs/phpmyadmin/phpmyadmin.yaml
-kubectl delete -f srcs/wordpress/wordpress.yaml
+#kubectl delete -f srcs/ftps/ftps.yaml
+#kubectl delete -f srcs/grafana/grafana.yaml
+#kubectl delete -f srcs/influxdb/influxdb.yaml
+#kubectl delete -f srcs/mysql/mysql.yaml
+#kubectl delete -f srcs/nginx/nginx.yaml
+#kubectl delete -f srcs/phpmyadmin/phpmyadmin.yaml
+#kubectl delete -f srcs/wordpress/wordpress.yaml
 
 ######################################
 # CONFIGURE METALLB AS LOAD-BALANCER #
@@ -129,8 +129,11 @@ kubectl apply -f srcs/wordpress/wordpress.yaml
 ##########################
 #    LAST ADJUSTMENTS    #
 ##########################
-screen -dmS ftp ./srcs/ftps/srcs/get_ftps_ip.sh
+screen -dmS ftpip ./srcs/ftps/srcs/get_ftps_ip.sh
 echo ""
 echo "Getting IP for FTPS, it will be running shortly..."
+echo "Waiting a few moments before launching dashboard..."
+sleep 10
+screen -dmS dashboard minikube dashboard
 echo "Thank you for waiting :)"
 echo ""

@@ -25,18 +25,14 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
 ALTER USER 'root'@'localhost' IDENTIFIED BY '';
 CREATE USER 'user'@'%' IDENTIFIED BY 'random';
 GRANT ALL ON *.* TO 'user'@'%';
-CREATE USER 'other'@'%' IDENTIFIED BY 'other';
-GRANT ALL ON *.* TO 'other '@'%';
 CREATE DATABASE wordpress;
 FLUSH PRIVILEGES;
 EOF
 /usr/bin/mysqld --user=mysql --bootstrap --verbose=0 < $tfile
 rm -f $tfile
 screen -dmS mysql /usr/bin/mysqld --user=mysql --console
-###############
-#while [ ! `mysqladmin ping` ]
-#while !(mysqladmin ping)
-#do
-#  sleep 1
-#done
-#mysql -u root wordpress < import/wordpress_db.sql
+while [ ! `mysqladmin ping` ]
+do
+  sleep 1
+done
+mysql -u root wordpress < import/wordpress.sql

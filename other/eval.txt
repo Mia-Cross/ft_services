@@ -12,8 +12,6 @@
 ____________________________________________
 											\
 RESTE A FAIRE :								 \
-Creer + de users sur wordpress                \
-Finir le script d'install filezilla           /
 Adapter le tout sur Linux/VM                 /
 ____________________________________________/
 
