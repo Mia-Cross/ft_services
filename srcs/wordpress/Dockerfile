@@ -13,7 +13,6 @@ RUN apk add wget && apk add tar \
 	&& sed -i 's/TMP_PORT/5050/g' /etc/nginx/nginx.conf \
 	&& sed -i "s/\"nginx\"/\"wordpress\"/g" /etc/telegraf/telegraf.conf \
 	&& mv import/wp-config.php /var/www/
-#	&& mv import/wp-settings.php /var/www/
 
 CMD nginx ; php-fpm7 ; screen -dmS telegraf telegraf ; tail -F /dev/null
 

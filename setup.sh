@@ -79,13 +79,13 @@ screen -dmS filezilla ${FZ_PATH}filezilla
 ######################################
 #      CLEAN-UP PREVIOUS BUILD ?     #
 ######################################
-#kubectl delete -f srcs/ftps/ftps.yaml
-#kubectl delete -f srcs/grafana/grafana.yaml
-#kubectl delete -f srcs/influxdb/influxdb.yaml
-#kubectl delete -f srcs/mysql/mysql.yaml
-#kubectl delete -f srcs/nginx/nginx.yaml
-#kubectl delete -f srcs/phpmyadmin/phpmyadmin.yaml
-#kubectl delete -f srcs/wordpress/wordpress.yaml
+kubectl delete -f srcs/ftps/ftps.yaml
+kubectl delete -f srcs/grafana/grafana.yaml
+kubectl delete -f srcs/influxdb/influxdb.yaml
+kubectl delete -f srcs/mysql/mysql.yaml
+kubectl delete -f srcs/nginx/nginx.yaml
+kubectl delete -f srcs/phpmyadmin/phpmyadmin.yaml
+kubectl delete -f srcs/wordpress/wordpress.yaml
 
 ######################################
 # CONFIGURE METALLB AS LOAD-BALANCER #
@@ -104,10 +104,9 @@ cp srcs/metallb/config_base.yaml srcs/metallb/config.yaml
 sed -ie "s/MINIKUBE_IP/$IP/g" srcs/metallb/config.yaml
 kubectl apply -f srcs/metallb/config.yaml
 
-###########################
-#    DATABASE HANDLING    #
-###########################
-
+#############################
+#  MYSQL DATABASE HANDLING  #
+#############################
 eval $(minikube docker-env)
 docker build -t my_telegraf srcs/telegraf/
 docker build -t my_nginx srcs/nginx/
@@ -127,14 +126,11 @@ sed -ie "s/WORDPRESS_IP/$IPWP/g" srcs/mysql/srcs/wordpress.sql
 #   BUILD DOCKER IMAGES   #
 ###########################
 eval $(minikube docker-env)
-#docker build -t my_telegraf srcs/telegraf/
-#docker build -t my_nginx srcs/nginx/
 docker build -t my_ftps srcs/ftps/
 docker build -t my_grafana srcs/grafana/
 docker build -t my_influxdb srcs/influxdb/
 docker build -t my_mysql srcs/mysql/
 docker build -t my_phpmyadmin srcs/phpmyadmin/
-#docker build -t my_wordpress srcs/wordpress/
 eval $(minikube docker-env -u)
 
 #########################
@@ -146,7 +142,6 @@ kubectl apply -f srcs/influxdb/influxdb.yaml
 kubectl apply -f srcs/mysql/mysql.yaml
 kubectl apply -f srcs/nginx/nginx.yaml
 kubectl apply -f srcs/phpmyadmin/phpmyadmin.yaml
-#kubectl apply -f srcs/wordpress/wordpress.yaml
 
 ##########################
 #    LAST ADJUSTMENTS    #
@@ -154,12 +149,13 @@ kubectl apply -f srcs/phpmyadmin/phpmyadmin.yaml
 echo ""
 screen -dmS ftpip ./srcs/ftps/srcs/get_ftps_ip.sh
 echo "Getting IP for FTPS, it will be running shortly..."
-echo "Waiting a few moments before launching other services..."
+echo "Waiting a few moments before launching dashboard..."
 sleep 10
-echo "Launching dashboard..."
 screen -dmS dashboard minikube dashboard
-echo "Importing MySQL database for WordPress, it will be running shortly..."
-#bash srcs/mysql/import_wp_database2.sh
-echo "Thank you for waiting :)"
 echo ""
-#while
+while [[ $(env | grep IPFTPS | grep .) = '' ]]
+do
+    sleep 1
+done
+echo "FTPS Service accessible via Filezilla @ $IPFTPS"
+echo "Thank you for waiting :)"
