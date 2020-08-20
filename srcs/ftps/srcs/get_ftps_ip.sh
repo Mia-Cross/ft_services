@@ -8,7 +8,7 @@ do
 			sleep 1
 			IPFTPS=`kubectl get services/ftps -o=custom-columns='ADDRESS:status.loadBalancer.ingress[0].ip'|tail -n1`
 		done
-		export $IPFTPS
+		export IPFTPS
 		env | grep IPFTPS
 		kubectl exec deploy/ftps-deployment -- pkill vsftpd
 		kubectl exec deploy/ftps-deployment -- sed -ie "s/FTPS_IP/$IPFTPS/g" /etc/vsftpd/vsftpd.conf
