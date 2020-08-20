@@ -31,8 +31,11 @@ EOF
 /usr/bin/mysqld --user=mysql --bootstrap --verbose=0 < $tfile
 rm -f $tfile
 screen -dmS mysql /usr/bin/mysqld --user=mysql --console
-while [ ! `mysqladmin ping` ]
+echo "Begin sleep"
+sleep 10
+echo "End sleep"
+while [[ ! `mysqladmin ping` ]]
 do
-  sleep 1
+	sleep 3
 done
-mysql -u root wordpress < import/wordpress.sql
+mysql -u root wordpress < /import/wordpress.sql > cmd_output
