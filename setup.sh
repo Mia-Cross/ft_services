@@ -153,9 +153,4 @@ echo "Waiting a few moments before launching dashboard..."
 sleep 10
 screen -dmS dashboard minikube dashboard
 echo ""
-while [[ $(env | grep IPFTPS | grep .) = '' ]]
-do
-    sleep 1
-done
-echo "FTPS Service accessible via Filezilla @ $IPFTPS"
 echo "Thank you for waiting :)"
