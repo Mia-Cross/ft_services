@@ -41,4 +41,4 @@ spec:
   - port: 443
     name: https
   - port: 22
-    name: ftps
+    name: ssh

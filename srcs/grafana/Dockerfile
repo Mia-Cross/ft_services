@@ -6,7 +6,7 @@ COPY srcs import
 
 RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
 	&& apk update && apk add curl && apk add grafana@testing \
-	&& sed -i "s/TMP_BDD/grafana/g" /etc/telegraf/telegraf.conf \
+	&& sed -i "s/DB_NAME/grafana/g" /etc/telegraf/telegraf.conf \
 	&& mv import/provisioning /usr/share/grafana/
 
 CMD screen -dmS telegraf telegraf ; \

@@ -1,5 +1,13 @@
 #!/bin/bash
 
+IPNGINX=`kubectl get services/nginx -o=custom-columns='ADDRESS:status.loadBalancer.ingress[0].ip'|tail -n1`
+while [ $IPNGINX = '<none>' ]
+do
+	sleep 1
+	IPNGINX=`kubectl get services/ftps -o=custom-columns='ADDRESS:status.loadBalancer.ingress[0].ip'|tail -n1`
+done
+echo "$IPNGINX (Nginx)" > services_ips
+
 while true
 do
 	if [ `kubectl exec deploy/ftps-deployment -- grep FTPS_IP /etc/vsftpd/vsftpd.conf` ]

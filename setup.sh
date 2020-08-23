@@ -74,7 +74,7 @@ else
 fi
 echo "Starting the cluster now..."
 minikube start --vm-driver=$VM_DRIVER --cpus=$NB_CORES --memory=$MEM
-screen -dmS filezilla ${FZ_PATH}filezilla
+#screen -dmS filezilla ${FZ_PATH}filezilla
 
 ######################################
 #      CLEAN-UP PREVIOUS BUILD ?     #
@@ -113,6 +113,8 @@ docker build -t my_nginx srcs/nginx/
 docker build -t my_wordpress srcs/wordpress/
 eval $(minikube docker-env -u)
 kubectl apply -f srcs/wordpress/wordpress.yaml
+kubectl apply -f srcs/nginx/nginx.yaml
+# GET WORDPRESS IP
 IPWP=`kubectl get services/wordpress -o=custom-columns='ADDRESS:status.loadBalancer.ingress[0].ip'|tail -n1`
 while [ $IPWP = '<none>' ]
 do
@@ -147,10 +149,19 @@ kubectl apply -f srcs/phpmyadmin/phpmyadmin.yaml
 #    LAST ADJUSTMENTS    #
 ##########################
 echo ""
-screen -dmS ftpip ./srcs/ftps/srcs/get_ftps_ip.sh
-echo "Getting IP for FTPS, it will be running shortly..."
+if [ -f "services_ips" ]
+then
+    rm services_ips
+fi
+mkfifo services_ips
+screen -dmS ftpip ./srcs/ftps/srcs/get_ftps_ip2.sh
+echo "Fetching IP for FTPS, it will be running shortly..."
 echo "Waiting a few moments before launching dashboard..."
 sleep 10
 screen -dmS dashboard minikube dashboard
 echo ""
 echo "Thank you for waiting :)"
+read line < services_ips
+echo "You can now connect to Nginx via SSH with user=lemarabe @$line"
+read line < services_ips
+echo "FTPS Service now accessible via Filezilla @$line"

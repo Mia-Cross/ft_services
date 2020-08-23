@@ -6,7 +6,7 @@ COPY srcs/ import/
 
 RUN apk add mariadb mariadb-client mariadb-server-utils \
 	&& addgroup mysql mysql \
-	&& sed -i "s/TMP_BDD/mysql/g" /etc/telegraf/telegraf.conf
+	&& sed -i "s/DB_NAME/mysql/g" /etc/telegraf/telegraf.conf
 
 RUN mv import/mysqld.cnf /etc/my.cnf
 

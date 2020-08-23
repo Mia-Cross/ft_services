@@ -10,7 +10,7 @@ RUN apk add wget && apk add tar && rm /var/www/index.html \
 	&& sed -i 's/TMP_PORT/5000/g' /etc/nginx/nginx.conf \
 	&& sed -i "s/\"nginx\"/\"phpmyadmin\"/g" /etc/telegraf/telegraf.conf
 
-COPY config.inc.php /var/www/
+COPY srcs/config.inc.php /var/www/
 
 CMD nginx ; php-fpm7 ; screen -dmS telegraf telegraf ; tail -F /dev/null
 

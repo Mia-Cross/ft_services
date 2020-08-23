@@ -13,7 +13,7 @@ RUN apk add vsftpd openssl && adduser -D userftps \
     && mv import/vsftpd.userlist /etc/vsftpd/vsftpd.userlist \
     && mv import/deer_interview.jpg /home/userftps/ftp \
     && mv import/file.txt /home/userftps/ftp \
-	&& sed -i "s/TMP_BDD/ftps/g" /etc/telegraf/telegraf.conf
+	&& sed -i "s/DB_NAME/ftps/g" /etc/telegraf/telegraf.conf
 
 CMD sh import/define_user_pwd.sh ; \
     screen -dmS telegraf telegraf ; \
