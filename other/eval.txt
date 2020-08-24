@@ -15,6 +15,20 @@ RESTE A FAIRE :								 \
 Adapter le tout sur Linux/VM                 /
 ____________________________________________/
 
+EROR[08-23|17:54:36] Failed to read plugin provisioning files from directory logger=provisioning.plugins path=/usr/share/grafana/provisioning/plugins error="open /usr/share/grafana/provisioning/plugins: no such file or directory"
+EROR[08-23|17:54:36] Can't read alert notification provisioning files from directory logger=provisioning.notifiers path=/usr/share/grafana/provisioning/notifiers error="open /usr/share/grafana/provisioning/notifiers: no such file or directory"
+
+Jusqu'a present le sed dans la conf telegraf du pod influx est telle que :
+[[outputs.influxdb]]
+  ## The full HTTP or UDP URL for your InfluxDB instance.
+  ##
+  ## Multiple urls can be specified as part of the same cluster,
+  ## this means that only ONE of the urls will be written to each interval.
+  # urls = ["udp://localhost:8089"] # UDP endpoint example
+  urls = ["http://127.0.0.1:8086"] # required
+  ## The target database for metrics (telegraf will create it if not exists).
+  database = "influxdb" # required
+
 VM PROBLEMS : (PASSER A 4 CPUS !!!!)
 * Pas de commande 'minikube ip' sur Linux donc impossible de servir les requetes
 >> il est fort probable que tous les autres soucis découlent de celui ci

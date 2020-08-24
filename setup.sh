@@ -149,7 +149,7 @@ kubectl apply -f srcs/phpmyadmin/phpmyadmin.yaml
 #    LAST ADJUSTMENTS    #
 ##########################
 echo ""
-if [ -f "services_ips" ]
+if [[ -f "services_ips" ]]
 then
     rm services_ips
 fi
